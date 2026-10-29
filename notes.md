@@ -38,8 +38,6 @@ Platforms such as [YojanaMitra](https://github.com/Symbiote07/YojanaMitra), [sch
 
 ### Gap and contribution (write this in your own words)
 
-1. ...
-2. ...
-3. ...
+“Existing systems mostly demonstrate that scheme assistants can be built. My contribution is measuring how well different retrieval strategies work on Hindi, English and Hinglish queries, on a verified dataset, and how that changes with scale and voice input.”
 ## Learning log
 (har din 2-3 lines: kya seekha, kya fail hua)
