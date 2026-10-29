@@ -7,8 +7,11 @@ This affects farmers, people with limited education, and SC/ST beneficiaries the
 Existing portals expect users to already know the scheme name and to search in English or formal Hindi, while many people ask questions in everyday Hindi or Hinglish.
 ## Objectives
 1.Build a curated, verified dataset of central and Madhya Pradesh schemes.
+
 2.Build a RAG-based assistant that answers Hindi, English and Hinglish queries with source citations.
+
 3.Measure and compare retrieval strategies on a test set.
+
 4.Add a voice interface for users who prefer speaking over typing
 
 ## Scope
