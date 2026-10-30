@@ -1,0 +1,57 @@
+[
+{
+  "id": "ladli_behna",
+  "name": "Mukhyamantri Ladli Behna Yojana",
+  "name_hi": "मुख्यमंत्री लाडली बहना योजना",
+  "category": "women",
+  "level": "MP",
+  "target_group": [
+    "woman"
+  ],
+  "benefits_text": "पात्र महिलाओं को ₹1,500 प्रतिमाह की आर्थिक सहायता दी जाती है। यह राशि सीधे उनके स्वयं के आधार-लिंक्ड और डीबीटी (DBT) इनेबल्ड बैंक खाते में ट्रांसफर की जाती है।",
+  "eligibility_text": "महिला मध्यप्रदेश की स्थानीय निवासी होनी चाहिए। विवाहित होना आवश्यक है (जिसमें विधवा, तलाकशुदा एवं परित्यक्ता महिला भी सम्मिलित हैं)। परिवार की सम्मिलित वार्षिक आय ₹2.5 लाख से अधिक न हो। परिवार का कोई सदस्य आयकरदाता न हो। परिवार के पास संयुक्त रूप से 5 एकड़ से अधिक कृषि भूमि न हो, और परिवार के किसी सदस्य के नाम पर पंजीकृत चार पहिया वाहन (ट्रैक्टर को छोड़कर) न हो।आवेदन के कैलेंडर वर्ष में, 01 जनवरी की स्थिति में 21 वर्ष पूर्ण कर चुकी हों तथा 60 वर्ष की आयु से कम हो।",
+  "documents_text": "परिवार की 8-अंकीय समग्र आईडी, सदस्य की स्वयं की 9-अंकीय समग्र आईडी, आधार कार्ड, समग्र पोर्टल पर पूर्ण e-KYC, मोबाइल नंबर और स्वयं का आधार-लिंक्ड DBT सक्रिय बैंक खाता।",
+  "apply_text": "आवेदन प्रक्रिया पूर्णतः निःशुल्क है। आवेदन फॉर्म ग्राम पंचायत, वार्ड कार्यालय, आंगनवाड़ी केंद्र या विशेष कैंप से प्राप्त किए जा सकते हैं। कैंप प्रभारी द्वारा पोर्टल या मोबाइल ऐप के माध्यम से ऑनलाइन प्रविष्टि की जाएगी। इसके लिए आवेदिका को स्वयं उपस्थित होना अनिवार्य है ताकि उनका लाइव फोटो (Live Photo) लिया जा सके और बायोमेट्रिक e-KYC की प्रक्रिया पूरी हो सके। आवेदन स्वीकृत होने पर पावती (Acknowledgment) प्रदान की जाएगी।",
+  "apply_url": "https://mp.gov.in",
+  "source_url": "https://cmladlibahna.mp.gov.in/",
+  "last_updated": "2026-10-30",
+  "notes": "Registration status alag verify karna"
+}
+
+,
+{
+  "id": "scholarship_1",
+  "name": "Mukhya Mantri Medhavi Vidyarthi Yojana",
+  "name_hi": "मुख्यमंत्री मेधावी विद्यार्थी योजना",
+  "category": "education",
+  "level": "MP",
+  "target_group": [
+    "student"
+  ],
+  "benefits_text": "Provides full tuition fee coverage for students who score 70% or above in the MP Board or 85% or above in CBSE/ICSE exams, with a family income limit of ₹8,00,000.",
+  "eligibility_text": "Must be a resident of Madhya Pradesh. Secured 70% or more marks in MP Board or 85% or more marks in CBSE/ICSE in Class 12 exams. Annual family income must be under ₹8 Lakhs from all sources. Enrolled in an undergraduate course at a recognized university. For competitive courses: JEE Main rank within 1,50,000 for Engineering, NEET merit clearance for Medical/Dental, or CLAT clearance for admission to National Law Universities/Delhi University.",
+  "documents_text": "Samagra ID, Aadhaar Card, Class 10th and 12th marksheets, Valid Income Certificate, Domicile Certificate of MP, College Admission Letter & Fee Structure Receipts, Competitive Exam Scorecard/Rank Card (JEE/NEET/CLAT), and Bank Account Passbook copy.",
+  "apply_text": "Apply online through the designated state portal. New applicants must register using their 9-digit Samagra ID and complete Aadhaar-based OTP verification. Fill out the application form with demographic and academic credentials, upload required documentation, and submit. Print the final confirmation slip and submit it along with hard copies of your documents to your institution for verification.",
+  "apply_url": "https://www.medhavikalyan.mp.gov.in/MMVY.aspx",
+  "source_url": "https://www.medhavikalyan.mp.gov.in/MMVY.aspx",
+  "last_updated": "2026-10-30"
+}
+,
+{
+  "id": "pm_kisan",
+  "name": "PM-Kisan Samman Nidhi",
+  "name_hi": "प्रधानमंत्री किसान सम्मान निधि योजना",
+  "category": "agriculture",
+  "level": "MP",
+  "target_group": [
+    "farmer"
+  ],
+  "benefits_text": "Provides an income support of ₹6,000 per year to all landholding farmer families. The financial benefit is released in three equal installments of ₹2,000 every four months directly into the bank accounts of the beneficiaries via Direct Benefit Transfer (DBT).",
+  "eligibility_text": "All small and marginal landholding farmer families who own cultivable land in their names are eligible. Exclusions apply to institutional landholders, income tax payers, individuals holding constitutional posts, and retired or serving government employees, as well as professionals like doctors, engineers, and lawyers.",
+  "documents_text": "Aadhaar Card (mandatory), landholding papers/property ownership documents (Khatauni/Khasra details), mobile number linked with Aadhaar, and a bank account passbook copy reflecting an active Aadhaar-linked and DBT-enabled account.",
+  "apply_text": "Farmers can self-register online through the PM-Kisan portal via the 'Farmers Corner' or visit local Common Service Centres (CSCs). The process requires entering Aadhaar details, filling out land and personal credentials, uploading land records, and completing e-KYC using OTP or biometric verification. Local revenue authorities (Patwari/Nodal Officers) verify the records before approval.",
+  "apply_url": "https://pmkisan.gov.in",
+  "source_url": "https://pmkisan.gov.in",
+  "last_updated": "2026-10-30"
+}
+]
