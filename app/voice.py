@@ -49,6 +49,24 @@ def transcribe_audio(audio_bytes):
         return None
 
 
+def clean_text_for_speech(text: str) -> str:
+    """Markdown formatting, asterisks, bullets aur special characters ko clean karo
+    taaki TTS 'tarankit' ya 'asterisk' bolne ke bajaye saaf bhasha me bole."""
+    import re
+
+    # Remove bold/italic markers (* and _)
+    text = re.sub(r"[*_~`#]", " ", text)
+    # Remove bullet dashes and symbols at start of lines
+    text = re.sub(r"^\s*[-•]\s*", "", text, flags=re.MULTILINE)
+    # Replace Rupee symbol with 'rupaye' for clear voice readout
+    text = text.replace("₹", "रुपये ").replace("Rs.", "रुपये ")
+    # Replace multiple hyphens/dashes with space
+    text = re.sub(r"[-–—]", " ", text)
+    # Collapse multiple spaces and newlines
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
 def text_to_speech(text):
     """Convert text to speech audio bytes using gTTS.
     Returns bytes (MP3) or None if failed."""
@@ -58,11 +76,17 @@ def text_to_speech(text):
         return None
 
     try:
-        # Detect if text is primarily Hindi
-        hindi_chars = sum(1 for c in text if "\u0900" <= c <= "\u097f")
-        lang = "hi" if hindi_chars > len(text) * 0.3 else "en"
+        # Markdown aur asterisks ko pehle clean karo
+        speech_text = clean_text_for_speech(text)
+        if not speech_text:
+            return None
 
-        tts = gTTS(text=text[:500], lang=lang)  # limit length for TTS
+        # Detect if text is primarily Hindi / Devanagari
+        hindi_chars = sum(1 for c in speech_text if "\u0900" <= c <= "\u097f")
+        lang = "hi" if hindi_chars > len(speech_text) * 0.25 else "en"
+
+        # Limit to first ~600 characters for snappy playback
+        tts = gTTS(text=speech_text[:600], lang=lang)
         buf = io.BytesIO()
         tts.write_to_fp(buf)
         buf.seek(0)
