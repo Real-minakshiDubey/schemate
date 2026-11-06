@@ -58,6 +58,12 @@ with st.sidebar:
 
     st.markdown("---")
     st.subheader("🎤 Voice Input")
+    voice_lang = st.selectbox(
+        "Speaking Language",
+        options=["English", "Auto (English / Hindi)", "Hindi"],
+        index=0,
+        help="Select English if speaking in English, or Hindi for pure Hindi",
+    )
     st.caption("Apna sawal bolkar poochiye:")
     audio_value = st.audio_input("Apna sawal boliye...")
 
@@ -71,7 +77,7 @@ with st.sidebar:
             if hasattr(audio_value, "seek"):
                 audio_value.seek(0)
             with st.spinner("Voice audio transcribe ho raha hai..."):
-                transcribed = transcribe_audio(audio_value)
+                transcribed = transcribe_audio(audio_value, language_mode=voice_lang)
             if transcribed:
                 st.success(f"Transcript: {transcribed}")
                 voice_query = transcribed

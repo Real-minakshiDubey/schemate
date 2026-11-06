@@ -2,7 +2,7 @@ import io
 import streamlit as st
 
 
-def transcribe_audio(audio_bytes):
+def transcribe_audio(audio_bytes, language_mode: str = "Auto (English / Hindi)"):
     """Transcribe audio from st.audio_input using speech_recognition.
     Returns transcribed text or None if failed."""
     try:
@@ -35,15 +35,26 @@ def transcribe_audio(audio_bytes):
                 st.error(f"Audio processing error: {conv_err}")
                 return None
 
-        # Try Hindi first, then English
-        try:
-            text = recognizer.recognize_google(audio, language="hi-IN")
-        except sr.UnknownValueError:
+        # Determine language priority based on user selection or smart fallback
+        if language_mode == "English":
             try:
-                text = recognizer.recognize_google(audio, language="en-IN")
+                return recognizer.recognize_google(audio, language="en-IN")
             except sr.UnknownValueError:
                 return None
-        return text
+        elif language_mode == "Hindi":
+            try:
+                return recognizer.recognize_google(audio, language="hi-IN")
+            except sr.UnknownValueError:
+                return None
+        else:
+            # Auto mode: try English first so English sentences aren't phonetically written in Devanagari!
+            try:
+                return recognizer.recognize_google(audio, language="en-IN")
+            except sr.UnknownValueError:
+                try:
+                    return recognizer.recognize_google(audio, language="hi-IN")
+                except sr.UnknownValueError:
+                    return None
     except Exception as e:
         st.error(f"Voice transcription failed: {e}")
         return None
