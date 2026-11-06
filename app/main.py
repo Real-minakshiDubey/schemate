@@ -8,7 +8,7 @@ if str(ROOT_DIR) not in sys.path:
 
 import streamlit as st
 
-from app.components import render_sources, render_welcome
+from app.components import apply_custom_css, render_sources, render_welcome
 from app.voice import transcribe_audio, text_to_speech
 
 try:
@@ -36,9 +36,28 @@ def get_rag_engine():
 # Page configuration
 st.set_page_config(page_title="SchemeSense", page_icon="🏛️", layout="wide")
 
-# Main Title and Caption
-st.title("🏛️ SchemeSense")
-st.caption("Sarkari yojanaon ki jaankari — Hindi, English, Hinglish mein poochiye")
+# Apply modern colorful styling
+apply_custom_css()
+
+# Main Vibrant Header Banner
+st.markdown(
+    """
+    <div class="main-header-container">
+        <h1 class="main-header-title">🏛️ SchemeSense</h1>
+        <div class="main-header-sub">
+            AI-powered Government Scheme Discovery & Eligibility Assistant
+        </div>
+        <div class="lang-pill-container">
+            <span class="lang-pill">🌐 Hindi / हिन्दी</span>
+            <span class="lang-pill">🇬🇧 English</span>
+            <span class="lang-pill">🔀 Hinglish</span>
+            <span class="lang-pill">🎙️ Voice Input & Audio Output</span>
+            <span class="lang-pill">⚡ Multilingual E5 + Gemini 2.5</span>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # --- Sidebar ---
 with st.sidebar:
