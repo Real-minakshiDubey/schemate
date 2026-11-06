@@ -4,3 +4,8 @@ data/raw/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+data/chroma/
+data/processed/
+*.bak
+*.bak2
+image.png

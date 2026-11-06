@@ -1,0 +1,46 @@
+qid,language,question,correct_name
+q01_en,en,"Is there a scheme in Madhya Pradesh that pays college fees for students who scored high marks in class 12?",Medhavi Vidhyarti
+q01_hi,hi,"मध्य प्रदेश में क्या कोई ऐसी योजना है जो 12वीं में अच्छे अंक लाने वाले विद्यार्थियों की कॉलेज फीस भरती है?",Medhavi Vidhyarti
+q01_hing,hinglish,"MP mein kya koi scheme hai jo 12th mein achhe marks laane wale students ki college fees bharti hai?",Medhavi Vidhyarti
+q02_en,en,"How do I apply for a scholarship for post-matric students in Madhya Pradesh?",Post Metric Scholarship - Madhya Pradesh
+q02_hi,hi,"मध्य प्रदेश में 10वीं के बाद पढ़ने वाले छात्रों की छात्रवृत्ति के लिए आवेदन कैसे करें?",Post Metric Scholarship - Madhya Pradesh
+q02_hing,hinglish,"MP mein 10th ke baad padhne wale students ki scholarship ke liye apply kaise karein?",Post Metric Scholarship - Madhya Pradesh
+q03_en,en,"Who is eligible for the pension scheme for widows in Madhya Pradesh?",Widow Pension Scheme-Madhya Pradesh
+q03_hi,hi,"मध्य प्रदेश में विधवा महिलाओं के लिए पेंशन योजना में कौन पात्र है?",Widow Pension Scheme-Madhya Pradesh
+q03_hing,hinglish,"MP mein vidhwa mahilaon ki pension ke liye kaun eligible hai?",Widow Pension Scheme-Madhya Pradesh
+q04_en,en,"How can a poor family get financial help from the Madhya Pradesh government for their daughter's wedding?",Kanya Vivaah
+q04_hi,hi,"गरीब परिवार की बेटी की शादी के लिए मध्य प्रदेश सरकार से आर्थिक मदद कैसे मिलेगी?",Kanya Vivaah
+q04_hing,hinglish,"Gareeb parivar ki beti ki shaadi ke liye MP sarkar se paise ki madad kaise milegi?",Kanya Vivaah
+q05_en,en,"Who can join the low-cost life insurance scheme of the central government?",Jeevan Jyoti
+q05_hi,hi,"केंद्र सरकार की कम प्रीमियम वाली जीवन बीमा योजना में कौन शामिल हो सकता है?",Jeevan Jyoti
+q05_hing,hinglish,"Central government ki kam premium wali life insurance scheme mein kaun join kar sakta hai?",Jeevan Jyoti
+q06_en,en,"Is there a subsidy for farmers in Madhya Pradesh who want to grow medicinal plants?",Aushadhi Avam Sugandhit
+q06_hi,hi,"मध्य प्रदेश में औषधीय पौधों की खेती करने वाले किसानों के लिए सब्सिडी योजना कौन सी है?",Aushadhi Avam Sugandhit
+q06_hing,hinglish,"MP mein dawai wale paudhon ki kheti karne wale kisano ko subsidy kahan milti hai?",Aushadhi Avam Sugandhit
+q07_en,en,"Does Madhya Pradesh give an incentive when a person with a disability gets married?",Nihshaktajan Vivaah
+q07_hi,hi,"मध्य प्रदेश में दिव्यांग व्यक्ति के विवाह पर कोई प्रोत्साहन राशि मिलती है क्या?",Nihshaktajan Vivaah
+q07_hing,hinglish,"Viklang vyakti ki shaadi par MP mein kuch protsahan rashi milti hai kya?",Nihshaktajan Vivaah
+q08_en,en,"How do unorganised workers get government help to buy a sewing machine?",Silai Machine
+q08_hi,hi,"असंगठित मजदूरों को सिलाई मशीन खरीदने के लिए सरकारी सहायता कैसे मिलती है?",Silai Machine
+q08_hing,hinglish,"Asangathit mazdooron ko silai machine ke liye sarkari madad kaise milti hai?",Silai Machine
+q09_en,en,"Can students do an internship with the Madhya Pradesh tourism board?",Internship Policy Of The Madhya Pradesh Tourism
+q09_hi,hi,"क्या विद्यार्थी मध्य प्रदेश पर्यटन बोर्ड में इंटर्नशिप कर सकते हैं?",Internship Policy Of The Madhya Pradesh Tourism
+q09_hing,hinglish,"Kya students MP tourism board mein internship kar sakte hain?",Internship Policy Of The Madhya Pradesh Tourism
+q10_en,en,"Who is eligible for the post-matric scholarship for economically backward class students?",Economically Backward Class
+q10_hi,hi,"आर्थिक रूप से पिछड़े वर्ग के विद्यार्थियों की पोस्ट मैट्रिक छात्रवृत्ति के लिए कौन पात्र है?",Economically Backward Class
+q10_hing,hinglish,"Economically backward class ke students ki post matric scholarship ke liye kaun eligible hai?",Economically Backward Class
+q11_en,en,"Scholarship for SC and ST students doing postgraduate professional courses",Post-Graduate Scholarships for Professional Courses
+q11_hi,hi,"अनुसूचित जाति और जनजाति के विद्यार्थियों के लिए व्यावसायिक पाठ्यक्रमों में स्नातकोत्तर छात्रवृत्ति",Post-Graduate Scholarships for Professional Courses
+q11_hing,hinglish,"SC ST students ko professional course mein PG karne ke liye scholarship kahan se milegi?",Post-Graduate Scholarships for Professional Courses
+q12_en,en,"Is there a loan scheme for backward class people who want to start a business?",NBCFDC General Loan
+q12_hi,hi,"पिछड़े वर्ग के लोगों के लिए व्यवसाय शुरू करने हेतु ऋण योजना क्या है?",NBCFDC General Loan
+q12_hing,hinglish,"Backward class ke logon ko business shuru karne ke liye loan kaise milta hai?",NBCFDC General Loan
+q13_en,en,"Is there a pension from the central government for journalists?",Pension Benefits to the Journalists
+q13_hi,hi,"क्या केंद्र सरकार की ओर से पत्रकारों के लिए पेंशन योजना है?",Pension Benefits to the Journalists
+q13_hing,hinglish,"Journalists ke liye central government ki pension scheme kya hai?",Pension Benefits to the Journalists
+q14_en,en,"Do athletes get a cash prize from the government for winning medals in international competitions?",Cash Awards To Medal Winners
+q14_hi,hi,"क्या अंतरराष्ट्रीय खेल प्रतियोगिताओं में पदक जीतने पर खिलाड़ियों को सरकार से नकद पुरस्कार मिलता है?",Cash Awards To Medal Winners
+q14_hing,hinglish,"International competition mein medal jeetne par khiladiyon ko sarkar se cash award kaise milta hai?",Cash Awards To Medal Winners
+q15_en,en,"Is there government support for women doing research in science and engineering?",Women Involvement in Science
+q15_hi,hi,"क्या विज्ञान और इंजीनियरिंग अनुसंधान में काम करने वाली महिलाओं के लिए सरकारी सहायता है?",Women Involvement in Science
+q15_hing,hinglish,"Science aur engineering research karne wali mahilaon ke liye sarkari help kya hai?",Women Involvement in Science

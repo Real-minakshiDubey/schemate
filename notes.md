@@ -47,3 +47,8 @@ day1: “Gemini ne ₹1,250 bataya, official source par ₹1,500. LLM ki jaankar
 https://cmladlibahna.mp.gov.in/
 ![alt text](image.png)
 (har din 2-3 lines: kya seekha, kya fail hua)
+
+English aur Hindi query dono ne ek English document ko rank 1 par pakda (cross-lingual retrieval kaam karti hai).
+Hinglish query top 30 chunks mein nahi aayi.
+Wajah abhi pata nahi: script, shabd (“viklang”), ya vakya. Diagnostic experiment se alag karenge.
+Ye ek scheme par hai, general nateeja nahi.
