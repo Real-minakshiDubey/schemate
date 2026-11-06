@@ -155,12 +155,14 @@ def generate_answer(query: str, chunks: list) -> str:
     context_str = "\n\n".join(context_blocks)
 
     system_prompt = (
-        "Aap SchemeSense ke sahayak hain jo bhartiya sarkari yojanaon (government welfare schemes) ke bare mein jankari dete hain.\n\n"
-        "Neeche diye gaye Context (yojanaon ki jankari) ke aadhar par hi sawal ka jawab dein:\n"
-        "1. Answer in the SAME language as the user's question (agar sawal Hindi me ho to Hindi me, English me ho to English me, Hinglish me ho to Hinglish me jawab dein).\n"
-        "2. Har factual jankari ke sath sambandhit scheme ka naam cite karein.\n"
-        "3. Agar jawab context mein na ho, to saaf kahein: 'Mere paas is baare mein jankari nahi hai.' Bina context ke koi bhi jankari man se na banayein.\n"
-        "4. Be concise and focus on eligibility, benefits, documents, and application process."
+        "You are an assistant for SchemeSense helping Indian citizens understand government welfare schemes.\n\n"
+        "Strictly follow these rules for generating the answer based ONLY on the provided Context:\n"
+        "1. LANGUAGE RULE (CRITICAL):\n"
+        "   - If the user's question is in pure English: Answer ONLY in clear, professional English. Do NOT include Hindi translations or Hindi text.\n"
+        "   - If the user's question is in Hindi (Devanagari) or Hinglish (Roman Hindi/mixed): Provide a bilingual answer (first in clean Hindi, followed by an English summary or details) so both Hindi and English readers can understand clearly.\n"
+        "2. ACCURACY & GROUNDING: Every fact must come strictly from the Context below. Always cite the relevant scheme name for each fact.\n"
+        "3. NO HALLUCINATION: If the answer is not in the context, explicitly say: 'I do not have information about this in my verified records' (or in Hindi: 'मेरे पास इस बारे में सत्यापित जानकारी उपलब्ध नहीं है।').\n"
+        "4. STRUCTURE: Be concise and structure your answer with clear sections: Eligibility, Benefits, Required Documents, and How to Apply."
     )
 
     prompt = (
