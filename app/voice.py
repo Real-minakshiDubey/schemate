@@ -16,13 +16,33 @@ def transcribe_audio(audio_bytes):
         # st.audio_input returns UploadedFile (BytesIO-like)
         audio_data = audio_bytes.read()
         audio_file = io.BytesIO(audio_data)
-        with sr.AudioFile(audio_file) as source:
-            audio = recognizer.record(source)
+
+        # sr.AudioFile expects WAV format. Try directly, or convert with pydub if needed
+        try:
+            with sr.AudioFile(audio_file) as source:
+                audio = recognizer.record(source)
+        except Exception:
+            try:
+                from pydub import AudioSegment
+                audio_file.seek(0)
+                seg = AudioSegment.from_file(audio_file)
+                wav_io = io.BytesIO()
+                seg.export(wav_io, format="wav")
+                wav_io.seek(0)
+                with sr.AudioFile(wav_io) as source:
+                    audio = recognizer.record(source)
+            except Exception as conv_err:
+                st.error(f"Audio processing error: {conv_err}")
+                return None
+
         # Try Hindi first, then English
         try:
             text = recognizer.recognize_google(audio, language="hi-IN")
         except sr.UnknownValueError:
-            text = recognizer.recognize_google(audio, language="en-IN")
+            try:
+                text = recognizer.recognize_google(audio, language="en-IN")
+            except sr.UnknownValueError:
+                return None
         return text
     except Exception as e:
         st.error(f"Voice transcription failed: {e}")
