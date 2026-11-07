@@ -69,6 +69,39 @@ def _get_genai_client():
 # Retrieval & Generation Functions
 # ---------------------------------------------------------------------------
 
+def expand_query(user_query: str) -> str:
+    """
+    Colloquial words, Hinglish, aur regional terms (e.g. 'viklang', 'shaadi', 'chhatravritti')
+    ko official English aur formal Hindi keywords me expand karta hai taaki ChromaDB vector retrieval
+    har bhasha aur script ke sawalon par highest recall de sake.
+    """
+    try:
+        client = _get_genai_client()
+        prompt = (
+            "You are a search query optimizer for Indian Government Welfare Schemes (Central & State policies).\n"
+            "Your task is to expand the user query into high-relevance search keywords to retrieve official scheme documents.\n"
+            "Documents in the database are primarily in official English and formal Hindi.\n\n"
+            "Rules:\n"
+            "1. Identify the core intent, target audience (e.g. students, persons with disabilities/Divyangjan, farmers, women, unorganized workers), and benefit type (scholarship, pension, loan, grant, subsidy).\n"
+            "2. Expand colloquial, slang, or Hinglish words to their formal equivalents in both English and Hindi:\n"
+            "   - e.g. 'viklang' -> 'disabled persons with disabilities PwD Divyangjan दिव्यांग निःशक्तजन'\n"
+            "   - e.g. 'shaadi' -> 'marriage vivah nikah विवाह'\n"
+            "   - e.g. 'padhai / scholarship' -> 'scholarship fellowship chhatravritti छात्रवृत्ति'\n"
+            "   - e.g. 'kisaan' -> 'farmer agriculture krishi kisan किसान'\n"
+            "3. Return ONLY a concise, space-separated expansion string containing the original query plus the formal English and Hindi synonyms. Do NOT output explanations or markdown formatting.\n\n"
+            f"User query: {user_query}\n"
+            "Search keywords:"
+        )
+        res = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+        if res and res.text:
+            cleaned = res.text.strip().replace("\n", " ")
+            if len(cleaned) > 10:
+                return cleaned
+    except Exception:
+        pass
+    return user_query
+
+
 def retrieve(query: str, n_results: int = N_RESULTS, level_filter: str = None) -> list:
     """
     User query ke aadhar par ChromaDB se relevant chunks fetch karta hai,
@@ -83,8 +116,12 @@ def retrieve(query: str, n_results: int = N_RESULTS, level_filter: str = None) -
         List of dicts: [{scheme_id, name, region, level, section, score, text}]
     """
     model = _get_model()
-    # E5 query embedding ke liye 'query: ' prefix lagana zaroori hai
-    query_text = "query: " + query.strip()
+
+    # Step 1: Query expansion (colloquial / Hinglish ko official vocabulary se link karo)
+    search_query = expand_query(query)
+
+    # Step 2: E5 query embedding ke liye 'query: ' prefix lagana zaroori hai
+    query_text = "query: " + search_query.strip()
     q_vec = model.encode([query_text], normalize_embeddings=True).tolist()
 
     col = _get_collection()
