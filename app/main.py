@@ -36,37 +36,55 @@ def get_rag_engine():
 # Page configuration
 st.set_page_config(page_title="SchemeSense", page_icon="🏛️", layout="wide")
 
-# Apply modern colorful styling
+# Apply modern Deep Indigo + Electric Blue futuristic styling
 apply_custom_css()
 
-# Main Vibrant Header Banner
+# Futuristic Hero Card Header
 st.markdown(
     """
-    <div class="main-header-container">
-        <h1 class="main-header-title">🏛️ SchemeSense</h1>
-        <div class="main-header-sub">
+    <div class="hero-container">
+        <div class="hero-title-row">
+            <span class="hero-icon">🏛️</span>
+            <h1 class="hero-title">SchemeSense</h1>
+        </div>
+        <div class="hero-sub">
             AI-powered Government Scheme Discovery & Eligibility Assistant
         </div>
-        <div class="lang-pill-container">
-            <span class="lang-pill">🌐 Hindi / हिन्दी</span>
-            <span class="lang-pill">🇬🇧 English</span>
-            <span class="lang-pill">🔀 Hinglish</span>
-            <span class="lang-pill">🎙️ Voice Input & Audio Output</span>
-            <span class="lang-pill">⚡ Multilingual E5 + Gemini 2.5</span>
+        <div class="feature-badge-row">
+            <span class="feature-badge"><span>🌐</span> Hindi / हिंदी</span>
+            <span class="feature-badge"><span>🇬🇧</span> English</span>
+            <span class="feature-badge"><span>🔀</span> Hinglish</span>
+            <span class="feature-badge"><span>🎙️</span> Voice Input & Audio Output</span>
+            <span class="feature-badge"><span>⚡</span> Multilingual AI</span>
         </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-# --- Sidebar ---
+# --- Sidebar Redesign ---
 with st.sidebar:
-    st.header("⚙️ Filter")
+    # SchemeSense branding card
+    st.markdown(
+        """
+        <div class="sidebar-brand-box">
+            <div class="sidebar-brand-icon">🏛️</div>
+            <div>
+                <div class="sidebar-brand-text">SchemeSense</div>
+                <div class="sidebar-brand-tag">Intelligent Copilot</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("### ⚙️ Scheme Filter")
     level_option = st.radio(
-        "Scheme Level",
+        "Filter by Level",
         options=["All", "State", "Central"],
         index=0,
-        help="Filter schemes by government level",
+        help="Filter schemes by government jurisdiction level",
+        label_visibility="collapsed",
     )
     level_filter_map = {
         "All": None,
@@ -76,15 +94,17 @@ with st.sidebar:
     level_filter = level_filter_map[level_option]
 
     st.markdown("---")
-    st.subheader("🎤 Voice Input")
+    st.markdown("### 🎤 Voice Input")
+    st.caption("Speaking Language")
     voice_lang = st.selectbox(
         "Speaking Language",
         options=["English", "Auto (English / Hindi)", "Hindi"],
         index=0,
         help="Select English if speaking in English, or Hindi for pure Hindi",
+        label_visibility="collapsed",
     )
-    st.caption("Apna sawal bolkar poochiye:")
-    audio_value = st.audio_input("Apna sawal boliye...")
+    st.caption("Record your question:")
+    audio_value = st.audio_input("Apna sawal boliye...", label_visibility="collapsed")
 
     voice_query = None
     if audio_value is not None:
@@ -104,17 +124,20 @@ with st.sidebar:
                 st.warning("Voice samajh nahi aayi, kripya dobara bole ya type karein.")
 
     st.markdown("---")
-    st.subheader("ℹ️ About SchemeSense")
+    st.markdown("### ℹ️ About SchemeSense")
     st.markdown(
         """
-        **SchemeSense** ek RAG-based multilingual assistant hai jo nagrikon ko 
-        sarkari yojanaon (Central aur Madhya Pradesh) ki sahi jaankari deta hai.
-        
-        - 🌐 **Bhashayein**: Hindi, English, Hinglish
-        - 📚 **Data**: Verified Central & MP government schemes
-        - 🤖 **Models**: Multilingual E5 + Gemini 2.5 Flash
-        - 🎤 **Voice**: Speech Recognition & TTS
-        """
+        <div style="background: #171D35; border: 1px solid #293352; border-radius: 12px; padding: 14px; font-size: 0.85rem; color: #94A3B8; line-height: 1.5;">
+            <p style="margin-top: 0; color: #F1F5F9; font-weight: 600;">Enterprise RAG Platform</p>
+            An AI copilot delivering verified details for Central & Madhya Pradesh welfare policies.
+            <ul style="margin: 8px 0 0 -16px; padding: 0;">
+                <li>Cross-lingual retrieval (E5-base)</li>
+                <li>Strict factual grounding (Gemini 2.5)</li>
+                <li>Bi-directional voice interface</li>
+            </ul>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
 # --- Main Chat Area ---
@@ -135,11 +158,14 @@ for msg in st.session_state.messages:
         if msg.get("audio"):
             st.audio(msg["audio"], format="audio/mp3")
 
+# Check for pending query from welcome buttons
+pending_query = st.session_state.pop("pending_query", None)
+
 # Chat input
 text_query = st.chat_input("Apna sawal poochiye...")
 
-# Use query from voice if transcribed, otherwise from text input
-query = voice_query if voice_query else text_query
+# Prioritize pending button click, voice transcription, or text input
+query = pending_query if pending_query else (voice_query if voice_query else text_query)
 
 if query:
     # 1. Add user message to session state
