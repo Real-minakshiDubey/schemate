@@ -21,7 +21,8 @@ load_dotenv()
 
 # Constants
 MODEL_NAME = "intfloat/multilingual-e5-base"
-COLLECTION = "schemes_dev_e5base"
+DEFAULT_COLLECTION = "schemes_dev_e5base"
+FULL_COLLECTION = "schemes_full_e5base"
 CHROMA_PATH = os.path.join(PROJECT_ROOT, "data", "chroma")
 N_FETCH = 30   # ChromaDB se kitne chunks laane hain (dedup ke baad kam bachenge)
 N_RESULTS = 5  # deduplicate ke baad kitne schemes dikhane hain
@@ -49,9 +50,17 @@ def _get_model():
 
 @cache_resource
 def _get_collection():
-    """ChromaDB collection se persistent connection banayega."""
+    """ChromaDB collection se persistent connection banayega.
+    Agar full collection (2000+ schemes) available hai to use karega,
+    warna fallback to dev collection."""
     client = chromadb.PersistentClient(path=CHROMA_PATH)
-    return client.get_collection(COLLECTION)
+    try:
+        full_col = client.get_collection(FULL_COLLECTION)
+        if full_col.count() > 1000:
+            return full_col
+    except Exception:
+        pass
+    return client.get_collection(DEFAULT_COLLECTION)
 
 
 @cache_resource
