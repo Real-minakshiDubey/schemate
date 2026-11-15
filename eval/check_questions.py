@@ -1,50 +1,43 @@
 import csv
 import json
+import re
 from collections import Counter, defaultdict
 
+
+def norm(s):
+    s = s.lower().replace("–", "-").replace("—", "-")
+    return re.sub(r"\s+", " ", s).strip()
+
+
 with open("data/processed/schemes_sections.json", encoding="utf-8") as f:
-    records = json.load(f)
-dev_ids = {r["id"] for r in records if r["split"] == "dev"}
-name_of = {r["id"]: r["name"] for r in records}
+    dev = [r for r in json.load(f) if r["split"] == "dev"]
 
 with open("eval/questions.csv", encoding="utf-8-sig") as f:
     rows = list(csv.DictReader(f))
 
 problems = []
-per_group = defaultdict(set)
-
+groups = defaultdict(set)
 for r in rows:
-    qid = r["qid"]
     if r["language"] not in {"en", "hi", "hinglish"}:
-        problems.append(f"{qid}: language must be en / hi / hinglish, got {r['language']!r}")
+        problems.append(f"{r['qid']}: bad language {r['language']!r}")
     if not r["question"].strip():
-        problems.append(f"{qid}: question is empty")
-    for cid in r["correct_ids"].split(";"):
-        cid = cid.strip()
-        if cid not in dev_ids:
-            problems.append(f"{qid}: id {cid!r} not found in dev set (leading zero gayab?)")
-    per_group[qid.rsplit("_", 1)[0]].add(r["language"])
+        problems.append(f"{r['qid']}: empty question")
+    groups[r["qid"].rsplit("_", 1)[0]].add(r["language"])
 
-for base, langs in per_group.items():
+for g, langs in groups.items():
     if langs != {"en", "hi", "hinglish"}:
-        problems.append(f"{base}: has {sorted(langs)}, need all 3 languages")
+        problems.append(f"{g}: has {sorted(langs)}, need all 3")
 
-print("Questions:", len(rows))
-print("Per language:", dict(Counter(r["language"] for r in rows)))
-print("Distinct question groups:", len(per_group))
-
-print("\nCorrect scheme per group (khud dekh ke confirm karo):")
-shown = set()
-for r in rows:
-    base = r["qid"].rsplit("_", 1)[0]
-    if base in shown:
-        continue
-    shown.add(base)
-    cid = r["correct_ids"].split(";")[0].strip()
-    print(f"  {base}: {name_of.get(cid, '???')[:70]}")
+print("Questions:", len(rows), "| per language:", dict(Counter(r["language"] for r in rows)))
+print("\nName -> dev scheme (check yourself):")
+for key in sorted({r["correct_name"] for r in rows}):
+    hits = [d for d in dev if norm(key) in norm(d["name"])]
+    status = "OK " if len(hits) == 1 else "FIX"
+    detail = f"{hits[0]['id']} | {hits[0]['name'][:55]} | {hits[0]['region'][:22]}" if hits else "no match"
+    print(f"  {status} {key!r}: {len(hits)} match(es) -> {detail}")
+    if len(hits) != 1:
+        problems.append(f"name {key!r} matches {len(hits)} dev schemes")
 
 print("\nPROBLEMS:" if problems else "\nAll checks passed.")
 for p in problems:
     print(" -", p)
-
-    
