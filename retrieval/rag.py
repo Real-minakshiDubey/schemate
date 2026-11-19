@@ -102,11 +102,18 @@ def _get_collection():
 
 @cache_resource
 def _get_genai_client():
-    """Gemini 2.5 Flash ke liye genai.Client banayega (.env se GEMINI_API_KEY)."""
+    """Gemini 2.5 Flash ke liye genai.Client banayega (st.secrets ya .env se GEMINI_API_KEY)."""
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
+        try:
+            import streamlit as st
+            api_key = st.secrets.get("GEMINI_API_KEY")
+        except Exception:
+            pass
+
+    if not api_key:
         raise ValueError(
-            "GEMINI_API_KEY nahi mila! Kripya .env file me GEMINI_API_KEY set karein."
+            "GEMINI_API_KEY nahi mila! Kripya Streamlit Settings -> Secrets me GEMINI_API_KEY set karein."
         )
     return genai.Client(api_key=api_key)
 
