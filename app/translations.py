@@ -643,3 +643,81 @@ def t(key: str, lang: str = "en", **kwargs) -> str:
         except Exception:
             return text
     return text
+
+
+def localize_scheme_data(scheme: dict, lang: str = "en") -> dict:
+    """Translates common reason templates, document labels, and text to Hindi/Hinglish if requested."""
+    if lang != "hi" and lang != "hinglish":
+        return scheme
+
+    s = dict(scheme)
+    
+    # 1. Translate Match Reasons
+    if s.get("match_reasons"):
+        new_matches = []
+        for r in s["match_reasons"]:
+            if "Central Government Scheme" in r:
+                new_matches.append("केंद्र सरकार की योजना (देश के सभी राज्यों एवं केंद्र शासित प्रदेशों में लागू)")
+            elif "Resident of target state" in r:
+                state_nm = r.split(":")[-1].strip()
+                new_matches.append(f"पात्र राज्य के निवासी: {state_nm}")
+            elif "Age" in r and "falls within" in r:
+                new_matches.append(
+                    r.replace("Age", "आयु")
+                    .replace("yrs", "वर्ष")
+                    .replace("falls within eligible bracket", "पात्र आयु वर्ग के भीतर है")
+                    .replace("No upper limit", "कोई अधिकतम सीमा नहीं")
+                )
+            elif "Matches target occupation" in r:
+                new_matches.append(
+                    r.replace("Matches target occupation & group", "लक्षित व्यवसाय एवं वर्ग के अनुरूप")
+                    .replace("Student", "विद्यार्थी")
+                    .replace("Farmer", "किसान")
+                    .replace("Entrepreneur", "व्यवसायी / उद्यमी")
+                )
+            elif "Family income" in r and "within permissible limit" in r:
+                new_matches.append("पारिवारिक आय निर्धारित पात्रता सीमा के भीतर है")
+            elif "Meets female beneficiary criteria" in r:
+                new_matches.append("महिला लाभार्थी पात्रता मापदंड के पूर्णतः अनुकूल")
+            elif "Institution type" in r:
+                new_matches.append(r.replace("Institution type", "संस्थान का प्रकार"))
+            else:
+                new_matches.append(r)
+        s["match_reasons"] = new_matches
+
+    # 2. Translate Missing Criteria / Verification
+    if s.get("missing_criteria"):
+        new_missing = []
+        for m in s["missing_criteria"]:
+            if "Verification of original certificates" in m:
+                new_missing.append("विभागीय दस्तावेज़ जांच के दौरान मूल प्रमाण पत्रों का सत्यापन")
+            elif "Income certificate certifying" in m:
+                new_missing.append("सक्षम प्राधिकारी द्वारा जारी आय प्रमाण पत्र")
+            elif "Proof of age" in m:
+                new_missing.append("आयु सत्यापन प्रमाण पत्र (जन्म प्रमाण पत्र / अंकसूची)")
+            elif "Verification of domicile" in m:
+                new_missing.append("मूल निवासी / अधिवास प्रमाण पत्र (Domicile Certificate)")
+            else:
+                new_missing.append(m)
+        s["missing_criteria"] = new_missing
+
+    # 3. Translate Required Documents
+    doc_trans_hi = {
+        "Aadhaar Card": "आधार कार्ड (Aadhaar Card)",
+        "Proof of Identity": "पहचान पत्र (Proof of Identity)",
+        "Bank Account Details / Passbook": "बैंक खाता विवरण / पासबुक",
+        "Income Certificate": "आय प्रमाण पत्र (Income Certificate)",
+        "Domicile Certificate": "मूल निवासी प्रमाण पत्र (Domicile)",
+        "Caste Certificate": "जाति प्रमाण पत्र (Caste Certificate)",
+        "Disability Certificate": "दिव्यांगता प्रमाण पत्र (Disability Cert)",
+        "Passport Size Photographs": "पासपोर्ट साइज फोटो",
+        "Ration Card": "राशन कार्ड (Ration Card)",
+        "Educational Marksheet / Degree": "शैक्षणिक अंकसूची / प्रमाण पत्र",
+        "Land Ownership Records (Khasra/Khatauni)": "भूमि खसरा / खतौनी दस्तावेज़",
+    }
+    if s.get("required_documents"):
+        s["required_documents"] = [doc_trans_hi.get(d, d) for d in s["required_documents"]]
+
+    return s
+
+

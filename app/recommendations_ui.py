@@ -8,7 +8,7 @@ Uses native Streamlit containers and components for clean, robust rendering.
 from typing import Dict, Any, List
 import streamlit as st
 
-from app.translations import t
+from app.translations import t, localize_scheme_data
 from app.db import get_saved_scheme_ids, save_scheme, unsave_scheme
 from eligibility.profile_service import get_profile, get_profile_summary
 from eligibility.recommendation_service import get_recommendations_for_user
@@ -103,7 +103,8 @@ def render_recommendations_view(user: Dict[str, Any]):
     saved_scheme_ids = set(get_saved_scheme_ids(user_id))
 
     # Render Scheme Cards using native Streamlit containers
-    for idx, scheme in enumerate(recommendations):
+    for idx, raw_scheme in enumerate(recommendations):
+        scheme = localize_scheme_data(raw_scheme, lang=lang)
         _render_scheme_card(scheme, idx, lang, user_id, saved_scheme_ids)
 
     # Legal Disclaimer at bottom
