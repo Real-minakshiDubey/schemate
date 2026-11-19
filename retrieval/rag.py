@@ -1,5 +1,7 @@
 import os
 import sys
+import zipfile
+import urllib.request
 
 # Windows console encoding fix for Devanagari / multilingual printing
 if sys.stdout.encoding != "utf-8":
@@ -27,6 +29,12 @@ CHROMA_PATH = os.path.join(PROJECT_ROOT, "data", "chroma")
 N_FETCH = 30   # ChromaDB se kitne chunks laane hain (dedup ke baad kam bachenge)
 N_RESULTS = 5  # deduplicate ke baad kitne schemes dikhane hain
 
+# URL to download prebuilt Chroma vector store if not present on deployment platform
+CHROMA_DATA_URL = os.getenv(
+    "CHROMA_DATA_URL",
+    "https://github.com/Real-minakshiDubey/schemate/releases/download/v1.0.0/chroma_db.zip",
+)
+
 # Streamlit compatibility: agar streamlit me import ho to st.cache_resource use karein,
 # warna standard python execution me lru_cache fallback
 try:
@@ -36,6 +44,32 @@ except Exception:
     import functools
     def cache_resource(fn):
         return functools.lru_cache(maxsize=1)(fn)
+
+
+def ensure_chroma_ready():
+    """ChromaDB database file check karta hai.
+    Agar deployed environment (jaise Streamlit Cloud) me data/chroma maujood nahi hai,
+    to pre-indexed zip download karke extract karega."""
+    sqlite_file = os.path.join(CHROMA_PATH, "chroma.sqlite3")
+    if not os.path.exists(sqlite_file):
+        os.makedirs(CHROMA_PATH, exist_ok=True)
+        zip_temp_path = os.path.join(PROJECT_ROOT, "chroma_temp.zip")
+        print(f"ChromaDB not found at {sqlite_file}. Downloading from {CHROMA_DATA_URL}...")
+        try:
+            # Download zip
+            urllib.request.urlretrieve(CHROMA_DATA_URL, zip_temp_path)
+            # Extract to data/chroma
+            with zipfile.ZipFile(zip_temp_path, "r") as zip_ref:
+                zip_ref.extractall(CHROMA_PATH)
+            print("ChromaDB archive successfully downloaded and extracted.")
+        except Exception as e:
+            print(f"Warning: Failed to auto-download ChromaDB: {e}")
+        finally:
+            if os.path.exists(zip_temp_path):
+                try:
+                    os.remove(zip_temp_path)
+                except Exception:
+                    pass
 
 
 # ---------------------------------------------------------------------------
@@ -53,6 +87,9 @@ def _get_collection():
     """ChromaDB collection se persistent connection banayega.
     Agar full collection (2000+ schemes) available hai to use karega,
     warna fallback to dev collection."""
+    # Ensure vector store exists before initializing client
+    ensure_chroma_ready()
+
     client = chromadb.PersistentClient(path=CHROMA_PATH)
     try:
         full_col = client.get_collection(FULL_COLLECTION)
