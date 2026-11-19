@@ -260,12 +260,22 @@ def _render_step_3_occupation(user_id: int, lang: str):
         if "Student" in chosen_canonical_occ:
             st.markdown(f"##### {t('student_section', lang)}")
             c1, c2 = st.columns(2)
+            
+            student_lvl_choices = [
+                ("Undergraduate (B.Tech, B.Sc, B.Com, MBBS)", t("student_level_ug", lang)),
+                ("Postgraduate (M.Tech, M.Sc, MBA)", t("student_level_pg", lang)),
+                ("School (Class 9-12)", t("student_level_school", lang)),
+                ("Ph.D. / Research Fellowship", t("student_level_phd", lang)),
+                ("Diploma / ITI", t("student_level_diploma", lang)),
+            ]
+            
             with c1:
-                cur_lvl = st.selectbox(
+                cur_lvl_disp = st.selectbox(
                     t("student_level_label", lang),
-                    options=["Undergraduate (B.Tech, B.Sc, B.Com, MBBS)", "Postgraduate (M.Tech, M.Sc, MBA)", "School (Class 9-12)", "Ph.D. / Research Fellowship", "Diploma / ITI"],
+                    options=[label for _, label in student_lvl_choices],
                     index=0
                 )
+                cur_lvl = next((k for k, label in student_lvl_choices if label == cur_lvl_disp), "Undergraduate (B.Tech, B.Sc, B.Com, MBBS)")
             with c2:
                 inst_type = st.selectbox(
                     t("student_inst_label", lang),
@@ -274,7 +284,7 @@ def _render_step_3_occupation(user_id: int, lang: str):
                 )
             course_val = st.text_input(
                 t("student_course_label", lang),
-                value=add_attrs.get("course", "B.Tech"),
+                value=add_attrs.get("course", ""),
                 placeholder=t("student_course_placeholder", lang)
             )
             add_attrs["student_level"] = cur_lvl
