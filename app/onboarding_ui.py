@@ -53,6 +53,175 @@ STATE_TRANSLATIONS_HI = {
     "Puducherry": "पुदुचेरी (Puducherry)",
 }
 
+# Major districts categorized by state with bilingual support (Hindi / English)
+STATE_DISTRICTS_MAP = {
+    "Madhya Pradesh": [
+        ("Bhopal", "भोपाल (Bhopal)"),
+        ("Indore", "इंदौर (Indore)"),
+        ("Gwalior", "ग्वालियर (Gwalior)"),
+        ("Jabalpur", "जबलपुर (Jabalpur)"),
+        ("Ujjain", "उज्जैन (Ujjain)"),
+        ("Sagar", "सागर (Sagar)"),
+        ("Rewa", "रीवा (Rewa)"),
+        ("Satna", "सतना (Satna)"),
+        ("Ratlam", "रतलाम (Ratlam)"),
+        ("Chhindwara", "छिंदवाड़ा (Chhindwara)"),
+        ("Dewas", "देवास (Dewas)"),
+        ("Khargone", "खरगोन (Khargone)"),
+        ("Khandwa", "खंडवा (Khandwa)"),
+        ("Vidisha", "विदिशा (Vidisha)"),
+        ("Sehore", "सीहोर (Sehore)"),
+        ("Hoshangabad (Narmadapuram)", "नर्मदापुरम / होशंगाबाद"),
+        ("Morena", "मुरैना (Morena)"),
+        ("Bhind", "भिंड (Bhind)"),
+        ("Shivpuri", "शिवपुरी (Shivpuri)"),
+        ("Guna", "गुना (Guna)"),
+        ("Damoh", "दमोह (Damoh)"),
+        ("Katni", "कटनी (Katni)"),
+        ("Singrauli", "सिंगरौली (Singrauli)"),
+        ("Balaghat", "बालाघाट (Balaghat)"),
+        ("Betul", "बैतूल (Betul)"),
+        ("Dhar", "धार (Dhar)"),
+        ("Barwani", "बड़वानी (Barwani)"),
+        ("Mandsaur", "मंदसौर (Mandsaur)"),
+        ("Neemuch", "नीमच (Neemuch)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Uttar Pradesh": [
+        ("Lucknow", "लखनऊ (Lucknow)"),
+        ("Kanpur Nagar", "कानपुर (Kanpur)"),
+        ("Varanasi", "वाराणसी / बनारस (Varanasi)"),
+        ("Prayagraj", "प्रयागराज / इलाहाबाद (Prayagraj)"),
+        ("Agra", "आगरा (Agra)"),
+        ("Noida (Gautam Buddha Nagar)", "नोएडा / गौतम बुद्ध नगर"),
+        ("Ghaziabad", "गाजियाबाद (Ghaziabad)"),
+        ("Gorakhpur", "गोरखपुर (Gorakhpur)"),
+        ("Meerut", "मेरठ (Meerut)"),
+        ("Bareilly", "बरेली (Bareilly)"),
+        ("Aligarh", "अलीगढ़ (Aligarh)"),
+        ("Moradabad", "मुरादाबाद (Moradabad)"),
+        ("Ayodhya", "अयोध्या (Ayodhya)"),
+        ("Jhansi", "झांसी (Jhansi)"),
+        ("Mathura", "मथुरा (Mathura)"),
+        ("Saharanpur", "सहारनपुर (Saharanpur)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Bihar": [
+        ("Patna", "पटना (Patna)"),
+        ("Gaya", "गया (Gaya)"),
+        ("Bhagalpur", "भागलपुर (Bhagalpur)"),
+        ("Muzaffarpur", "मुजफ्फरपुर (Muzaffarpur)"),
+        ("Darbhanga", "दरभंगा (Darbhanga)"),
+        ("Purnia", "पूर्णिया (Purnia)"),
+        ("Begusarai", "बेगूसराय (Begusarai)"),
+        ("Ara (Bhojpur)", "आरा / भोजपुर (Ara)"),
+        ("Nalanda", "नालंदा / बिहारशरीफ (Nalanda)"),
+        ("Chhapra (Saran)", "छपरा / सारण (Saran)"),
+        ("Samastipur", "समस्तीपुर (Samastipur)"),
+        ("Katihar", "कटिहार (Katihar)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Rajasthan": [
+        ("Jaipur", "जयपुर (Jaipur)"),
+        ("Jodhpur", "जोधपुर (Jodhpur)"),
+        ("Kota", "कोटा (Kota)"),
+        ("Bikaner", "बीकानेर (Bikaner)"),
+        ("Ajmer", "अजमेर (Ajmer)"),
+        ("Udaipur", "उदयपुर (Udaipur)"),
+        ("Bhilwara", "भीलवाड़ा (Bhilwara)"),
+        ("Alwar", "अलवर (Alwar)"),
+        ("Bharatpur", "भरतपुर (Bharatpur)"),
+        ("Sikar", "सीकर (Sikar)"),
+        ("Pali", "पाली (Pali)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Maharashtra": [
+        ("Mumbai", "मुंबई (Mumbai)"),
+        ("Pune", "पुणे (Pune)"),
+        ("Nagpur", "नागपुर (Nagpur)"),
+        ("Thane", "ठाणे (Thane)"),
+        ("Nashik", "नासिक (Nashik)"),
+        ("Aurangabad (Chhatrapati Sambhajinagar)", "छत्रपति संभाजीनगर / औरंगाबाद"),
+        ("Solapur", "सोलापुर (Solapur)"),
+        ("Amravati", "अमरावती (Amravati)"),
+        ("Kolhapur", "कोल्हापुर (Kolhapur)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Delhi": [
+        ("Central Delhi", "मध्य दिल्ली (Central Delhi)"),
+        ("East Delhi", "पूर्वी दिल्ली (East Delhi)"),
+        ("New Delhi", "नई दिल्ली (New Delhi)"),
+        ("North Delhi", "उत्तरी दिल्ली (North Delhi)"),
+        ("North East Delhi", "उत्तर-पूर्वी दिल्ली (North East Delhi)"),
+        ("North West Delhi", "उत्तर-पश्चिमी दिल्ली (North West Delhi)"),
+        ("South Delhi", "दक्षिणी दिल्ली (South Delhi)"),
+        ("South East Delhi", "दक्षिण-पूर्वी दिल्ली (South East Delhi)"),
+        ("South West Delhi", "दक्षिण-पश्चिमी दिल्ली (South West Delhi)"),
+        ("West Delhi", "पश्चिमी दिल्ली (West Delhi)"),
+        ("Shahdara", "शाहदरा (Shahdara)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Chhattisgarh": [
+        ("Raipur", "रायपुर (Raipur)"),
+        ("Bhilai / Durg", "दुर्ग / भिलाई (Durg)"),
+        ("Bilaspur", "बिलासपुर (Bilaspur)"),
+        ("Korba", "कोरबा (Korba)"),
+        ("Rajnandgaon", "राजनांदगांव (Rajnandgaon)"),
+        ("Jagdalpur (Bastar)", "जगदलपुर / बस्तर (Bastar)"),
+        ("Ambikapur (Surguja)", "अंबिकापुर / सरगुजा (Surguja)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Gujarat": [
+        ("Ahmedabad", "अहमदाबाद (Ahmedabad)"),
+        ("Surat", "सूरत (Surat)"),
+        ("Vadodara", "वडोदरा (Vadodara)"),
+        ("Rajkot", "राजकोट (Rajkot)"),
+        ("Bhavnagar", "भावनगर (Bhavnagar)"),
+        ("Gandhinagar", "गांधीनगर (Gandhinagar)"),
+        ("Junagadh", "जूनागढ़ (Junagadh)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Haryana": [
+        ("Gurugram", "गुरुग्राम (Gurugram)"),
+        ("Faridabad", "फरीदाबाद (Faridabad)"),
+        ("Panipat", "पानीपत (Panipat)"),
+        ("Ambala", "अंबाला (Ambala)"),
+        ("Hisar", "हिसार (Hisar)"),
+        ("Karnal", "करनाल (Karnal)"),
+        ("Rohtak", "रोहतक (Rohtak)"),
+        ("Sonipat", "सोनीपत (Sonipat)"),
+        ("Panchkula", "पंचकुला (Panchkula)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Punjab": [
+        ("Ludhiana", "लुधियाना (Ludhiana)"),
+        ("Amritsar", "अमृतसर (Amritsar)"),
+        ("Jalandhar", "जालंधर (Jalandhar)"),
+        ("Patiala", "पटियाला (Patiala)"),
+        ("Bathinda", "बठिंडा (Bathinda)"),
+        ("Mohali (SAS Nagar)", "मोहाली (Mohali)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Uttarakhand": [
+        ("Dehradun", "देहरादून (Dehradun)"),
+        ("Haridwar", "हरिद्वार (Haridwar)"),
+        ("Nainital", "नैनीताल (Nainital)"),
+        ("Udham Singh Nagar", "उधम सिंह नगर (US Nagar)"),
+        ("Rishikesh", "ऋषिकेश (Rishikesh)"),
+        ("Almora", "अल्मोड़ा (Almora)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+    "Jharkhand": [
+        ("Ranchi", "रांची (Ranchi)"),
+        ("Jamshedpur (East Singhbhum)", "जमशेदपुर (Jamshedpur)"),
+        ("Dhanbad", "धनबाद (Dhanbad)"),
+        ("Bokaro", "बोकारो (Bokaro)"),
+        ("Deoghar", "देवघर (Deoghar)"),
+        ("Hazaribagh", "हजारीबाग (Hazaribagh)"),
+        ("Other District", "अन्य ज़िला (Other District)"),
+    ],
+}
+
 
 def render_onboarding_view(user: Dict[str, Any]):
     """Main entrypoint for rendering the onboarding experience."""
@@ -219,11 +388,28 @@ def _render_step_2_basic_info(user_id: int, lang: str):
                 state_idx = state_options.index(current_state) if current_state in state_options else 0
                 state_val = st.selectbox(t("state_label", lang), options=state_options, index=state_idx)
         with c_dist:
-            dist_val = st.text_input(
-                t("district_label", lang),
-                value=draft.get("district", ""),
-                placeholder=t("district_placeholder", lang),
-            )
+            dist_pairs = STATE_DISTRICTS_MAP.get(state_val, [("Other District", "अन्य ज़िला / Other District")])
+            current_dist = draft.get("district", "")
+            
+            if lang == "hi":
+                dist_display_list = [h_name for _, h_name in dist_pairs]
+                # Default selection index
+                dist_idx = 0
+                for idx, (c_name, h_name) in enumerate(dist_pairs):
+                    if current_dist and (current_dist.lower() in c_name.lower() or current_dist in h_name):
+                        dist_idx = idx
+                        break
+                selected_dist_disp = st.selectbox(t("district_label", lang), options=dist_display_list, index=dist_idx)
+                dist_val = next((c_name for c_name, h_name in dist_pairs if h_name == selected_dist_disp), selected_dist_disp)
+            else:
+                dist_display_list = [c_name for c_name, _ in dist_pairs]
+                dist_idx = 0
+                for idx, (c_name, _) in enumerate(dist_pairs):
+                    if current_dist and current_dist.lower() in c_name.lower():
+                        dist_idx = idx
+                        break
+                selected_dist_disp = st.selectbox(t("district_label", lang), options=dist_display_list, index=dist_idx)
+                dist_val = selected_dist_disp
 
         st.markdown("")
         col_back, col_fwd = st.columns([1, 1])
