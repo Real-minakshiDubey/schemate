@@ -1,4 +1,4 @@
-# 🏛️ SchemeSense
+# 🏛️ Schemate
 
 **A RAG-based multilingual assistant that helps Indian citizens discover government welfare schemes — in Hindi, English, and Hinglish.**
 
@@ -10,7 +10,7 @@ Information about government schemes is scattered across many portals and PDFs, 
 - They ask questions in everyday Hindi or Hinglish, but portals expect formal language
 - They depend on intermediaries who may not have complete information
 
-## What SchemeSense Does
+## What Schemate Does
 
 - **Curated dataset**: 200+ verified government schemes (Central + Madhya Pradesh)
 - **Multilingual RAG**: Ask in Hindi, English, or Hinglish — get grounded answers with source citations
@@ -132,7 +132,7 @@ Results are saved to `eval/results.json`.
 ## Project Structure
 
 ```
-schemesense/
+schemate/
 ├── app/                        # Streamlit chat application
 │   ├── main.py                 # App entry point
 │   ├── voice.py                # Voice input/output helpers
