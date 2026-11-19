@@ -6,3 +6,5 @@ python-dotenv>=1.0.0
 gTTS>=2.5.0
 requests>=2.31.0
 torch>=2.2.0
+SpeechRecognition>=3.10.0
+pydub>=0.25.1
