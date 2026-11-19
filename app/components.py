@@ -2,39 +2,45 @@ import streamlit as st
 
 
 def apply_custom_css():
-    """Apply ultra-premium Deep Indigo + Electric Blue futuristic AI SaaS styling."""
+    """Apply ChatGPT/Claude/Perplexity inspired Dark AI SaaS aesthetic without any white boxes."""
     st.markdown(
         """
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-        /* Strict Design System Palette */
+        /* Color System:
+           Main Background: #0B0F19
+           Sidebar Background: #101522
+           Chat Surface: #0B0F19
+           Input & Card Background: #171D2B
+           Hover Background: #222A3B
+           Border: #252D40
+           Primary: #7C5CFC
+           Primary Hover: #6D4AFF
+           Accent: #A5B4FC
+           Main Text: #F1F5F9
+           Secondary Text: #94A3B8
+           Muted Text: #64748B
+        */
         :root {
-            --bg-main: #0A0F1F;
-            --bg-sidebar: #0D1326;
-            --surface-primary: #111A30;
-            --surface-secondary: #17213A;
-            --surface-elevated: #1C2745;
-            --accent-primary: #6366F1;
-            --electric-blue: #38BDF8;
-            --gradient-accent: linear-gradient(135deg, #6366F1 0%, #38BDF8 100%);
-            --text-primary: #F1F5F9;
+            --bg-main: #0B0F19;
+            --bg-sidebar: #101522;
+            --bg-card: #171D2B;
+            --bg-hover: #222A3B;
+            --border: #252D40;
+            --primary: #7C5CFC;
+            --primary-hover: #6D4AFF;
+            --accent: #A5B4FC;
+            --text-main: #F1F5F9;
             --text-secondary: #94A3B8;
             --text-muted: #64748B;
-            --border-glass: rgba(148, 163, 184, 0.14);
-            --surface-glass: rgba(255, 255, 255, 0.035);
-            --input-bg: #141A30;
-            --hover-bg: #222B49;
-            --success: #22C55E;
-            --warning: #F59E0B;
-            --error: #EF4444;
         }
 
-        /* Global Application Canvas */
-        html, body, [data-testid="stAppViewContainer"] {
-            background-color: #0A0F1F !important;
-            color: #F1F5F9 !important;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        /* 1. Global Background & Typography */
+        html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], section.main {
+            background-color: var(--bg-main) !important;
+            color: var(--text-main) !important;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -42,398 +48,648 @@ def apply_custom_css():
             background-color: transparent !important;
         }
 
-        /* Sleek Modern Scrollbar */
+        /* 2. Global Scrollbars */
         ::-webkit-scrollbar {
             width: 5px;
             height: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: #0A0F1F;
+            background: var(--bg-main);
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.2);
-            border-radius: 9999px;
-            transition: background 0.2s ease;
+            background: var(--border);
+            border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #6366F1;
+            background: var(--primary);
         }
 
-        /* Premium Sidebar Panel */
+        /* 3. Global Button & Card Styling */
+        button, div[data-testid="stButton"] > button {
+            background-color: var(--bg-card) !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 10px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-shadow: none !important;
+        }
+        button:hover, div[data-testid="stButton"] > button:hover {
+            background-color: var(--bg-hover) !important;
+            border-color: var(--primary) !important;
+            color: #FFFFFF !important;
+        }
+
+        /* 4. Inputs & BaseWeb Dropdowns Dark Rules */
+        input, textarea, [data-baseweb="input"], [data-baseweb="base-input"] {
+            background-color: var(--bg-card) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border) !important;
+        }
+        input:focus, textarea:focus, [data-baseweb="input"]:focus-within {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 1px var(--primary) !important;
+        }
+
+        div[data-baseweb="select"] > div {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 8px !important;
+            color: var(--text-main) !important;
+        }
+        div[data-baseweb="select"] > div:hover {
+            border-color: var(--primary) !important;
+        }
+        ul[data-baseweb="menu"], [data-baseweb="popover"], div[data-testid="stPopoverBody"] {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text-main) !important;
+            border-radius: 10px !important;
+        }
+        li[data-baseweb="menu-item"] {
+            color: var(--text-main) !important;
+            background-color: var(--bg-card) !important;
+        }
+        li[data-baseweb="menu-item"]:hover {
+            background-color: var(--bg-hover) !important;
+            color: var(--accent) !important;
+        }
+
+        /* 5. Radio Buttons in Filters */
+        div[data-testid="stRadio"] > div {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 8px !important;
+            padding: 4px !important;
+        }
+        div[data-testid="stRadio"] label {
+            color: var(--text-secondary) !important;
+            font-size: 0.85rem !important;
+            border-radius: 6px !important;
+            padding: 4px 10px !important;
+        }
+        div[data-testid="stRadio"] label:hover {
+            color: var(--text-main) !important;
+            background-color: var(--bg-hover) !important;
+        }
+
+        /* 6. Sidebar Styling */
         [data-testid="stSidebar"] {
-            background-color: #0D1326 !important;
-            border-right: 1px solid rgba(148, 163, 184, 0.14) !important;
-            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+            background-color: var(--bg-sidebar) !important;
+            border-right: 1px solid var(--border) !important;
+            padding-top: 1rem !important;
         }
         [data-testid="stSidebar"] hr {
-            border-color: rgba(148, 163, 184, 0.14) !important;
-            margin: 1.1rem 0 !important;
+            border-color: var(--border) !important;
+            margin: 0.75rem 0 !important;
+            opacity: 0.5;
         }
-        [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
-            color: #F1F5F9 !important;
-            font-size: 0.88rem !important;
-            font-weight: 700 !important;
-            letter-spacing: 0.04em !important;
-            text-transform: uppercase !important;
-            margin-bottom: 0.6rem !important;
-        }
-        [data-testid="stSidebar"] .stCaption {
-            color: #94A3B8 !important;
-            font-size: 0.8rem !important;
-        }
-
-        /* Sidebar Branding Card */
-        .sidebar-brand-box {
+        .sidebar-brand-compact {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            background: rgba(255, 255, 255, 0.035);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(148, 163, 184, 0.14);
-            border-radius: 14px;
-            margin-bottom: 20px;
-            transition: border-color 0.2s ease, transform 0.2s ease;
-        }
-        .sidebar-brand-box:hover {
-            border-color: rgba(56, 189, 248, 0.4);
-            transform: translateY(-1px);
+            gap: 10px;
+            padding: 6px 8px;
+            margin-bottom: 10px;
         }
         .sidebar-brand-icon {
-            font-size: 1.4rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #FFFFFF;
+            font-size: 1.05rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(56, 189, 248, 0.15));
-            border: 1px solid rgba(99, 102, 241, 0.45);
-            border-radius: 10px;
         }
-        .sidebar-brand-text {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #F1F5F9;
+        .sidebar-brand-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
             letter-spacing: -0.02em;
         }
-        .sidebar-brand-tag {
-            font-size: 0.68rem;
-            color: #38BDF8;
-            font-weight: 700;
+        .sidebar-brand-badge {
+            font-size: 0.65rem;
+            color: var(--accent);
+            font-weight: 500;
+            background: rgba(124, 92, 252, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+
+        .new-chat-btn div.stButton > button {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text-main) !important;
+            font-weight: 600 !important;
+            font-size: 0.9rem !important;
+            border-radius: 10px !important;
+            padding: 10px 14px !important;
+            width: 100% !important;
+            text-align: left !important;
+            justify-content: flex-start !important;
+        }
+        .new-chat-btn div.stButton > button:hover {
+            background-color: var(--bg-hover) !important;
+            border-color: var(--primary) !important;
+            color: #FFFFFF !important;
+            transform: translateY(-1px) !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stTextInput"] input {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 8px !important;
+            color: var(--text-main) !important;
+            font-size: 0.86rem !important;
+        }
+
+        .history-section-header {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.08em;
+            margin: 12px 6px 6px 6px;
         }
 
-        /* Sidebar Radio Pill Controls */
-        div[data-testid="stRadio"] > div {
-            background-color: #111A30;
-            border: 1px solid rgba(148, 163, 184, 0.14);
-            border-radius: 12px;
-            padding: 5px;
-            gap: 4px;
-        }
-        div[data-testid="stRadio"] label {
-            color: #94A3B8 !important;
-            font-size: 0.88rem !important;
-            font-weight: 600 !important;
-            padding: 6px 12px !important;
+        .history-btn div.stButton > button {
+            background-color: transparent !important;
+            border: 1px solid transparent !important;
+            color: var(--text-secondary) !important;
             border-radius: 8px !important;
-            transition: all 0.2s ease !important;
+            padding: 7px 10px !important;
+            font-size: 0.86rem !important;
+            font-weight: 400 !important;
+            text-align: left !important;
+            justify-content: flex-start !important;
+            width: 100% !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
         }
-        div[data-testid="stRadio"] label:hover {
-            color: #F1F5F9 !important;
-            background-color: #17213A !important;
+        .history-btn div.stButton > button:hover {
+            background-color: var(--bg-hover) !important;
+            color: var(--text-main) !important;
+        }
+        .history-btn-active div.stButton > button {
+            background-color: var(--bg-card) !important;
+            border-color: var(--border) !important;
+            color: var(--text-main) !important;
+            font-weight: 600 !important;
         }
 
-        /* Selectbox styling */
-        div[data-baseweb="select"] > div {
-            background-color: #111A30 !important;
-            border: 1px solid rgba(148, 163, 184, 0.14) !important;
-            border-radius: 12px !important;
-            color: #F1F5F9 !important;
-            transition: border-color 0.2s ease !important;
+        /* 7. Welcome Hero & Suggested Cards */
+        .welcome-compact-hero {
+            max-width: 860px;
+            margin: 28px auto 16px auto;
+            text-align: center;
         }
-        div[data-baseweb="select"] > div:hover, div[data-baseweb="select"] > div:focus-within {
-            border-color: #38BDF8 !important;
-            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3) !important;
-        }
-
-        /* Hero Header (Glassmorphism & Animated Glow) */
-        .hero-container {
-            background: rgba(17, 26, 48, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(148, 163, 184, 0.14);
-            border-radius: 20px;
-            padding: 28px 32px;
-            margin-bottom: 24px;
-            box-shadow: 0 14px 40px -10px rgba(10, 15, 31, 0.9), 0 0 1px 1px rgba(99, 102, 241, 0.15);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.25s ease, border-color 0.25s ease;
-        }
-        .hero-container:hover {
-            border-color: rgba(56, 189, 248, 0.3);
-        }
-        .hero-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #6366F1 0%, #38BDF8 50%, rgba(99, 102, 241, 0) 100%);
-            animation: glowSweep 6s infinite linear;
-        }
-        @keyframes glowSweep {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
-        .hero-title-row {
+        .welcome-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(124, 92, 252, 0.15);
+            border: 1px solid rgba(124, 92, 252, 0.35);
+            color: var(--accent);
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 14px;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+        }
+        .welcome-hero-heading {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.025em;
             margin-bottom: 6px;
         }
-        .hero-icon {
-            font-size: 2.2rem;
-            filter: drop-shadow(0 2px 10px rgba(56, 189, 248, 0.35));
-        }
-        .hero-title {
-            font-size: 2.3rem !important;
-            font-weight: 800 !important;
-            letter-spacing: -0.03em !important;
-            background: linear-gradient(135deg, #F1F5F9 25%, #38BDF8 100%);
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            margin: 0 !important;
-            line-height: 1.15 !important;
-        }
-        .hero-sub {
-            font-size: 0.98rem !important;
-            color: #94A3B8 !important;
-            margin-bottom: 16px !important;
-            font-weight: 500 !important;
-        }
-
-        /* Glassmorphic Feature Badges */
-        .feature-badge-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .feature-badge {
-            background: rgba(255, 255, 255, 0.035);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(148, 163, 184, 0.14);
-            color: #F1F5F9;
-            font-size: 0.78rem;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 9999px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .feature-badge:hover {
-            border-color: #38BDF8;
-            color: #38BDF8;
-            background: rgba(56, 189, 248, 0.08);
-            transform: translateY(-1px);
-        }
-
-        /* Welcome Section Card */
-        .welcome-card-saas {
-            background: #111A30;
-            border: 1px solid rgba(148, 163, 184, 0.14);
-            border-radius: 18px;
-            padding: 24px 28px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-        }
-        .welcome-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #38BDF8;
-            margin-bottom: 8px;
-            letter-spacing: -0.01em;
-        }
-        .welcome-desc {
+        .welcome-hero-sub {
             font-size: 0.94rem;
-            color: #94A3B8;
-            line-height: 1.55;
-            margin-bottom: 18px;
-        }
-        .prompt-section-label {
-            font-size: 0.74rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #6366F1;
-            margin-bottom: 10px;
+            color: var(--text-secondary);
+            max-width: 580px;
+            margin: 0 auto 24px auto;
+            line-height: 1.5;
+            font-weight: 400;
         }
 
-        /* Clickable Example Prompts */
-        div.stButton > button {
-            background: #17213A !important;
-            border: 1px solid rgba(148, 163, 184, 0.14) !important;
-            border-left: 3px solid #38BDF8 !important;
-            color: #F1F5F9 !important;
+        .suggestions-wrapper {
+            max-width: 860px;
+            margin: 0 auto 24px auto;
+        }
+        .prompt-card div.stButton > button {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text-main) !important;
             border-radius: 12px !important;
-            padding: 12px 18px !important;
-            font-size: 0.9rem !important;
+            padding: 14px 16px !important;
+            font-size: 0.88rem !important;
             font-weight: 500 !important;
             text-align: left !important;
+            justify-content: flex-start !important;
             width: 100% !important;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+            min-height: 64px !important;
+            line-height: 1.4 !important;
+            box-shadow: none !important;
         }
-        div.stButton > button:hover {
-            background: #1C2745 !important;
-            border-color: #38BDF8 !important;
-            color: #38BDF8 !important;
+        .prompt-card div.stButton > button:hover {
+            background-color: var(--bg-hover) !important;
+            border-color: var(--primary) !important;
+            color: #FFFFFF !important;
             transform: translateY(-2px) !important;
-            box-shadow: 0 6px 18px rgba(56, 189, 248, 0.15) !important;
         }
 
-        /* Chat Message Surface Containers */
-        [data-testid="stChatMessage"] {
-            border-radius: 18px !important;
-            padding: 18px 22px !important;
-            margin-bottom: 14px !important;
-            border: 1px solid rgba(148, 163, 184, 0.14) !important;
-            font-size: 0.96rem !important;
-            line-height: 1.65 !important;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
-            transition: border-color 0.2s ease;
+        /* 8. Chat Message Bubbles */
+        .main-chat-container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding-bottom: 120px;
         }
-        /* User message: subtle indigo surface */
+        [data-testid="stChatMessage"] {
+            background-color: transparent !important;
+            border: none !important;
+            padding: 14px 0 !important;
+            margin-bottom: 10px !important;
+            font-size: 0.95rem !important;
+            line-height: 1.65 !important;
+            max-width: 880px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
         [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]),
         div[data-testid="stChatMessage"][aria-label="Chat message from user"] {
-            background-color: #17213A !important;
-            border-color: rgba(99, 102, 241, 0.35) !important;
-        }
-        /* Assistant message: dark elevated surface */
-        [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]),
-        div[data-testid="stChatMessage"][aria-label="Chat message from assistant"] {
-            background-color: #111A30 !important;
-            border-color: rgba(148, 163, 184, 0.14) !important;
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 16px !important;
+            padding: 14px 18px !important;
         }
 
-        /* Modern Code Blocks */
-        code {
-            background-color: #141A30 !important;
-            color: #38BDF8 !important;
-            border: 1px solid rgba(148, 163, 184, 0.18) !important;
-            border-radius: 6px !important;
-            padding: 2px 7px !important;
-            font-family: 'JetBrains Mono', monospace !important;
-            font-size: 0.88em !important;
-        }
-        pre {
-            background-color: #141A30 !important;
-            border: 1px solid rgba(148, 163, 184, 0.18) !important;
-            border-radius: 14px !important;
-            padding: 16px !important;
-        }
-
-        /* Source Citation Cards */
-        .source-card {
-            background: #17213A;
-            border: 1px solid rgba(148, 163, 184, 0.14);
-            border-radius: 14px;
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .source-card:hover {
-            border-color: #38BDF8;
-            background: #1C2745;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        }
-        .badge-central {
-            background: rgba(99, 102, 241, 0.18);
-            color: #818CF8;
-            border: 1px solid rgba(99, 102, 241, 0.45);
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            margin-left: 8px;
-            text-transform: uppercase;
-        }
-        .badge-state {
-            background: rgba(56, 189, 248, 0.15);
-            color: #38BDF8;
-            border: 1px solid rgba(56, 189, 248, 0.45);
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            margin-left: 8px;
-            text-transform: uppercase;
-        }
-        .badge-score {
-            background: rgba(34, 197, 94, 0.12);
-            color: #22C55E;
-            border: 1px solid rgba(34, 197, 94, 0.35);
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Chat Input: Glass-like Composer */
+        /* 9. NATIVE CHAT INPUT CONTAINER & FIXED MIC BUTTON
+           Position: inside [data-testid="stChatInput"] immediately to the left of the send button
+        */
         [data-testid="stChatInput"] {
             background-color: transparent !important;
+            padding: 0 !important;
+            max-width: 880px !important;
+            margin: 0 auto !important;
         }
         [data-testid="stChatInput"] > div {
-            background-color: rgba(20, 26, 48, 0.85) !important;
-            backdrop-filter: blur(16px) !important;
-            border: 1px solid rgba(148, 163, 184, 0.2) !important;
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
             border-radius: 18px !important;
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
+            padding: 4px 8px !important;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45) !important;
+            transition: all 0.2s ease !important;
         }
         [data-testid="stChatInput"] > div:focus-within {
-            border-color: #38BDF8 !important;
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3), 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 2px rgba(124, 92, 252, 0.25) !important;
         }
         [data-testid="stChatInput"] textarea {
-            color: #F1F5F9 !important;
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
-            font-size: 0.95rem !important;
+            color: var(--text-main) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.94rem !important;
+            line-height: 1.5 !important;
+            padding: 8px 60px 8px 12px !important;
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
         }
         [data-testid="stChatInput"] textarea::placeholder {
-            color: #64748B !important;
-        }
-        [data-testid="stChatInput"] button {
-            background: linear-gradient(135deg, #6366F1 0%, #38BDF8 100%) !important;
-            color: white !important;
-            border-radius: 12px !important;
-            border: none !important;
-            transition: all 0.2s ease !important;
-            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.35) !important;
-        }
-        [data-testid="stChatInput"] button:hover {
-            opacity: 0.92 !important;
-            transform: scale(1.04) !important;
-            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.45) !important;
+            color: var(--text-muted) !important;
         }
 
-        /* Expander Surface */
-        [data-testid="stExpander"] {
-            background-color: #111A30 !important;
-            border: 1px solid rgba(148, 163, 184, 0.14) !important;
-            border-radius: 14px !important;
+        /* Send button at right */
+        [data-testid="stChatInput"] button {
+            background-color: var(--primary) !important;
+            color: #FFFFFF !important;
+            border-radius: 10px !important;
+            border: none !important;
+            width: 32px !important;
+            height: 32px !important;
+            transition: background 0.2s ease !important;
         }
-        [data-testid="stExpander"] details summary {
-            color: #F1F5F9 !important;
-            font-weight: 600 !important;
+        [data-testid="stChatInput"] button:hover {
+            background-color: var(--primary-hover) !important;
+        }
+
+        /* FIXED MICROPHONE BUTTON INSIDE CHAT INPUT (Immediately left of send button) */
+        .st-chat-mic-anchor {
+            position: fixed;
+            bottom: 28px;
+            right: calc((100vw - 880px) / 2 + 56px);
+            z-index: 9999999;
+        }
+        @media (max-width: 1200px) {
+            .st-chat-mic-anchor {
+                right: calc((100vw - 700px) / 2 + 56px);
+            }
+        }
+        @media (max-width: 900px) {
+            .st-chat-mic-anchor {
+                right: 76px;
+            }
+        }
+
+        .st-chat-mic-anchor div[data-testid="stPopover"] > button {
+            background: transparent !important;
+            border: none !important;
+            color: var(--accent) !important;
+            width: 32px !important;
+            height: 32px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.25rem !important;
+            box-shadow: none !important;
+            border-radius: 8px !important;
+            transition: all 0.15s ease !important;
+        }
+        .st-chat-mic-anchor div[data-testid="stPopover"] > button:hover {
+            background: rgba(124, 92, 252, 0.2) !important;
+            color: #FFFFFF !important;
+            transform: scale(1.1) !important;
+        }
+
+        /* 10. Authentication Card & Branding */
+        .auth-page-container {
+            max-width: 460px;
+            margin: 20px auto 40px auto;
+            padding: 28px 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+        }
+        @media (max-width: 600px) {
+            .auth-page-container {
+                margin: 10px 8px;
+                padding: 20px 14px;
+            }
+        }
+        .auth-wrapper {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .auth-brand-logo {
+            width: 52px;
+            height: 52px;
+            line-height: 52px;
+            margin: 0 auto 10px auto;
+            background: rgba(124, 92, 252, 0.15);
+            border: 1px solid rgba(124, 92, 252, 0.35);
+            border-radius: 14px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-title {
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+        .auth-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tabs Dark Styling */
+        div[data-baseweb="tab-list"] {
+            background-color: var(--bg-main) !important;
+            border-radius: 10px !important;
+            padding: 4px !important;
+            border: 1px solid var(--border) !important;
+            gap: 6px !important;
+        }
+        div[data-baseweb="tab"] {
+            border-radius: 8px !important;
+            color: var(--text-secondary) !important;
+            font-weight: 500 !important;
+            padding: 8px 16px !important;
+            transition: all 0.2s ease !important;
+        }
+        div[data-baseweb="tab"][aria-selected="true"] {
+            background-color: var(--bg-card) !important;
+            color: #FFFFFF !important;
+            border-bottom: 2px solid var(--primary) !important;
+        }
+
+        /* 11. Language & Onboarding Cards */
+        .onboarding-page-container {
+            max-width: 680px;
+            margin: 20px auto 40px auto;
+            padding: 26px 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+        }
+        @media (max-width: 600px) {
+            .onboarding-page-container {
+                margin: 10px 8px;
+                padding: 18px 14px;
+            }
+        }
+        .lang-card-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+        }
+        .lang-card-wrap:hover {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+        .lang-title-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        .lang-desc-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .onboarding-progress-badge {
+            display: inline-block;
+            background: rgba(124, 92, 252, 0.15);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .sensitive-info-callout {
+            background: rgba(124, 92, 252, 0.08);
+            border-left: 3px solid var(--primary);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0 20px 0;
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* 12. Recommendation Dashboard & Scheme Cards */
+        .rec-dashboard-header {
+            margin-bottom: 24px;
+        }
+        .rec-profile-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        .rec-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px 24px;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+        .rec-card:hover {
+            border-color: rgba(124, 92, 252, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+        }
+        .rec-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .rec-scheme-name {
+            font-size: 1.22rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.35;
+        }
+        .rec-badges-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .rec-badge-eligible {
+            background: rgba(16, 185, 129, 0.16);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .rec-badge-verify {
+            background: rgba(245, 158, 11, 0.16);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .rec-badge-not-eligible {
+            background: rgba(239, 68, 68, 0.16);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .tag-central {
+            background: rgba(99, 102, 241, 0.15);
+            color: #A5B4FC;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .tag-state {
+            background: rgba(168, 85, 247, 0.15);
+            color: #C084FC;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .rec-reason-box {
+            background: rgba(16, 185, 129, 0.06);
+            border-left: 3px solid #10B981;
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 10px 0;
+            font-size: 0.86rem;
+            color: #D1FAE5;
+            line-height: 1.5;
+        }
+        .rec-missing-box {
+            background: rgba(245, 158, 11, 0.06);
+            border-left: 3px solid #F59E0B;
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 10px 0;
+            font-size: 0.86rem;
+            color: #FEF3C7;
+            line-height: 1.5;
+        }
+        .rec-disqualify-box {
+            background: rgba(239, 68, 68, 0.06);
+            border-left: 3px solid #EF4444;
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 10px 0;
+            font-size: 0.86rem;
+            color: #FECACA;
+            line-height: 1.5;
+        }
+        .rec-section-subhead {
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin: 12px 0 6px 0;
+        }
+        .doc-pill {
+            display: inline-block;
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 0.78rem;
+            margin: 3px 4px 3px 0;
+        }
+        .disclaimer-banner {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 30px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
         }
         </style>
         """,
@@ -442,62 +698,41 @@ def apply_custom_css():
 
 
 def render_sources(sources):
-    """Show source citations with futuristic cards, badges, and similarity scores."""
+    """Show verified source citations with modern badges, official links, and relevance scores."""
     if not sources:
         return
-    with st.expander(f"📚 Verified Sources ({len(sources)} schemes identified)", expanded=False):
+    with st.expander(f"📚 Verified Scheme Sources ({len(sources)} identified)", expanded=False):
         for i, s in enumerate(sources, 1):
             level = s.get("level", "").lower()
-            badge_html = (
-                '<span class="badge-central">🏛️ Central</span>'
-                if level == "central"
-                else '<span class="badge-state">🗺️ State (MP)</span>'
-            )
             region = s.get("region") or "All India"
+            badge = "🏛️ Central" if level == "central" else f"🗺️ State ({region})"
             section = s.get("section", "details").capitalize()
             score = s.get("score", 0.0)
+            link_md = f" • [Official Portal ↗]({s['official_link']})" if s.get("official_link") else ""
 
-            st.markdown(
-                f"""
-                <div class="source-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 700; font-size: 0.98rem; color: #F1F5F9;">{i}. {s['name']} {badge_html}</span>
-                        <span class="badge-score">Match: {score:.1%}</span>
-                    </div>
-                    <div style="font-size: 0.85rem; color: #94A3B8; margin-top: 4px;">
-                        📍 <span style="color: #F1F5F9;">{region}</span> &nbsp;•&nbsp; 📄 Section: <code style="color: #38BDF8;">{section}</code>
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            with st.container(border=True):
+                st.markdown(f"**{i}. {s['name']}**  `:violet[{badge}]` &nbsp; Match: `{score:.1%}`")
+                st.caption(f"📍 {region} • 📄 Section: `{section}`{link_md}")
 
 
 def render_welcome():
-    """Show Deep Indigo + Electric Blue futuristic welcome banner with clickable example prompts."""
-    st.markdown(
-        """
-        <div class="welcome-card-saas">
-            <div class="welcome-title">👋 Namaste & Welcome to SchemeSense!</div>
-            <div class="welcome-desc">
-                Your intelligent copilot for Indian welfare policies. Discover government schemes for 
-                <b>students, farmers, women, and workers</b> in seconds with source citations. 
-                Ask your question below or use the <b>🎤 Voice Input</b> in the sidebar.
-            </div>
-            <div class="prompt-section-label">⚡ Example Questions (Click to Ask)</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    """Welcome Hero with interactive suggestion cards in a 2-column layout."""
+    st.markdown("### 🏛️ Your Government Scheme Copilot")
+    st.caption("Discover government schemes, check eligibility, and understand benefits — in your language.")
+    st.markdown("")
 
+    col1, col2 = st.columns(2)
     prompts = [
-        ("🇬🇧", "Tell me about student scholarship schemes in Madhya Pradesh"),
-        ("🇮🇳", "गरीब परिवार की बेटी की शादी के लिए कौन सी योजना है?"),
-        ("🔀", "Ladli Behna yojana mein kitne paise milte hain aur eligibility kya hai?"),
+        ("🎓", "Find scholarships for students in Madhya Pradesh"),
+        ("💼", "Which schemes support women entrepreneurs?"),
+        ("🌾", "What benefits does PM-KISAN provide?"),
+        ("🤝", "Find schemes for low-income families"),
     ]
 
-    for emoji, text in prompts:
-            st.session_state["pending_query"] = text
-            st.rerun()
-
-
+    for idx, (emoji, prompt_text) in enumerate(prompts):
+        col = col1 if idx % 2 == 0 else col2
+        with col:
+            btn_label = f"{emoji}  {prompt_text}"
+            if st.button(btn_label, key=f"welcome_prompt_{idx}", use_container_width=True):
+                st.session_state["pending_query"] = prompt_text
+                st.rerun()

@@ -12,16 +12,16 @@ CHROMA_PATH = os.path.join(PROJECT_ROOT, "data", "chroma")
 MODEL_NAME = "intfloat/multilingual-e5-base"
 COLLECTION_NAME = "schemes_full_e5base"
 
-# Ensure UTF-8 output on Windows terminal
+# Ensure unbuffered UTF-8 output on Windows terminal
 if sys.stdout.encoding != "utf-8":
     try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
+        sys.stdout.reconfigure(encoding="utf-8", line_buffering=True)
+        sys.stderr.reconfigure(encoding="utf-8", line_buffering=True)
     except Exception:
         pass
 
-print("=== SchemeSense: Full Dataset Embedding Pipeline ===")
-print(f"Loading chunks from: {CHUNKS_PATH}")
+print("=== SchemeSense: Full Dataset Embedding Pipeline ===", flush=True)
+print(f"Loading chunks from: {CHUNKS_PATH}", flush=True)
 with open(CHUNKS_PATH, encoding="utf-8") as f:
     chunks = json.load(f)
 
@@ -99,10 +99,11 @@ for i in range(0, n_remaining, BATCH_SIZE):
         f"({done_so_far/n_remaining:.1%}) | "
         f"Speed: {rate:.1f} chunks/sec | "
         f"ETA: {int(eta_sec//60)}m {int(eta_sec%60)}s | "
-        f"Stored: {col.count():,}"
+        f"Stored: {col.count():,}",
+        flush=True
     )
 
-print("\n" + "="*60)
-print(f"SUCCESS! Embedded all {col.count():,} chunks from {unique_schemes:,} schemes.")
-print(f"Total time elapsed: {int((time.time() - start_time)//60)}m {int((time.time() - start_time)%60)}s")
-print("="*60)
+print("\n" + "="*60, flush=True)
+print(f"SUCCESS! Embedded all {col.count():,} chunks from {unique_schemes:,} schemes.", flush=True)
+print(f"Total time elapsed: {int((time.time() - start_time)//60)}m {int((time.time() - start_time)%60)}s", flush=True)
+print("="*60, flush=True)

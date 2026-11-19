@@ -179,18 +179,26 @@ def retrieve(query: str, n_results: int = N_RESULTS, level_filter: str = None) -
     return chunks
 
 
-def generate_answer(query: str, chunks: list) -> str:
+def generate_answer(
+    query: str,
+    chunks: list,
+    user_profile: dict = None,
+    evaluated_schemes: list = None
+) -> str:
     """
-    Retrieved chunks ke context ke aadhar par Gemini 2.5 Flash se grounded answer banata hai.
+    Retrieved chunks aur optional user profile / eligibility results ke context ke aadhar
+    par Gemini 2.5 Flash se grounded, personalized answer banata hai.
 
     Args:
         query: User ka sawal.
         chunks: retrieve() se mile hue chunks.
+        user_profile: Optional user demographic & occupation profile dict.
+        evaluated_schemes: Optional deterministically evaluated scheme eligibility results.
 
     Returns:
         Generated answer string.
     """
-    if not chunks:
+    if not chunks and not evaluated_schemes:
         return "Mere paas is baare mein jankari nahi hai."
 
     # Build context from chunks: [Name | Region | Section]\ntext
@@ -200,21 +208,91 @@ def generate_answer(query: str, chunks: list) -> str:
         context_blocks.append(f"{header}\n{c['text']}")
     context_str = "\n\n".join(context_blocks)
 
+    # Build profile context if available
+    profile_context_str = ""
+    if user_profile:
+        p_lines = [
+            f"- Age: {user_profile.get('age', 'Not specified')}",
+            f"- Gender: {user_profile.get('gender', 'Not specified')}",
+            f"- State of Residence: {user_profile.get('state', 'Not specified')}",
+            f"- District: {user_profile.get('district', 'Not specified')}",
+            f"- Primary Occupation: {user_profile.get('occupation', 'Not specified')}",
+            f"- Annual Family Income: ₹{user_profile.get('annual_family_income', 'Not specified')}",
+            f"- Education Level: {user_profile.get('education_level', 'Not specified')}",
+            f"- Social Category: {user_profile.get('social_category', 'General')}",
+            f"- Disability Status: {user_profile.get('disability_status', 'None')}",
+        ]
+        add_attr = user_profile.get("additional_attributes") or {}
+        if add_attr:
+            p_lines.append(f"- Additional Occupation Details: {add_attr}")
+        profile_context_str = "USER VERIFIED PROFILE:\n" + "\n".join(p_lines)
+
+    # Build evaluated schemes context if available
+    elig_context_str = ""
+    if evaluated_schemes:
+        scheme_blocks = []
+        for s in evaluated_schemes[:5]:
+            sb = (
+                f"• Scheme: {s['name']} ({s.get('region', 'India')})\n"
+                f"  - Level: {s.get('level', 'Central').title()} Scheme\n"
+                f"  - Deterministic Eligibility Status: {s['status']}\n"
+                f"  - Why Matches Profile: {', '.join(s.get('match_reasons', []))}\n"
+                f"  - Verification Required / Missing Info: {', '.join(s.get('missing_criteria', []))}\n"
+                f"  - Key Benefits: {s.get('benefits', '')[:200]}\n"
+                f"  - Official Link: {s.get('official_link', '')}\n"
+                f"  - Required Documents: {', '.join(s.get('required_documents', []))}"
+            )
+            scheme_blocks.append(sb)
+        elig_context_str = "DETERMINISTIC SCHEME ELIGIBILITY EVALUATION RESULTS:\n" + "\n\n".join(scheme_blocks)
+
+    pref_lang = user_profile.get("preferred_language", "en") if user_profile else "en"
+
+    # Multilingual instruction based on user preference
+    if pref_lang == "hi":
+        lang_instruction = (
+            "LANGUAGE (MANDATORY): The user has chosen HINDI (हिंदी) as their preferred language.\n"
+            "Respond 100% in natural, fluent, and polite Hindi (Devanagari script). "
+            "Keep official scheme names and links in recognizable format."
+        )
+    elif pref_lang == "hinglish":
+        lang_instruction = (
+            "LANGUAGE (MANDATORY): The user has chosen HINGLISH as their preferred language.\n"
+            "Respond in conversational, friendly Hinglish (Hindi written in Roman English alphabet, e.g. "
+            "'Aapke profile ke hisab se yeh schemes aapke liye eligible hain...'). "
+            "Keep official scheme names, department names, and links intact."
+        )
+    else:
+        lang_instruction = (
+            "LANGUAGE (MANDATORY): The user has chosen ENGLISH as their preferred language.\n"
+            "Respond strictly in clear, professional English vocabulary and grammar. "
+            "NEVER use Hinglish words when the user preferred language is English."
+        )
+
     system_prompt = (
-        "You are an assistant for SchemeSense helping Indian citizens understand government welfare schemes.\n\n"
-        "Strictly follow these rules for generating the answer based ONLY on the provided Context:\n"
-        "1. LANGUAGE RULES (CRITICAL):\n"
-        "   - If the user's question is in English: You MUST answer strictly in standard English vocabulary and grammar (e.g. 'The eligibility criteria are...', 'The benefits include...').\n"
-        "     NEVER write Hindi words in English alphabet (Hinglish like 'Aavedan karne ke liye...', 'Is yojana mein...', etc.) when the user asks in English. Answer 100% in pure English.\n"
-        "   - If the user's question is in Hindi (Devanagari script) or Roman Hindi (Hinglish): Provide the answer in clear Hindi (Devanagari), followed optionally by an English summary.\n"
-        "2. ACCURACY & GROUNDING: Every fact must come strictly from the Context below. Always cite the relevant scheme name for each fact.\n"
-        "3. NO HALLUCINATION: If the answer is not in the context, explicitly say: 'I do not have verified information about this in my records.' (or in Hindi: 'मेरे पास इस बारे में सत्यापित जानकारी उपलब्ध नहीं है।').\n"
-        "4. STRUCTURE: Be concise and structure your answer with clear bullet points: Eligibility, Benefits, Required Documents, and How to Apply."
+        "You are Schemate AI, an intelligent multilingual assistant for Indian Government Welfare Schemes.\n"
+        f"{lang_instruction}\n\n"
+        "GUIDELINES FOR ANSWERING:\n"
+        "1. GROUNDING & FIDELITY: Base your answer strictly on the provided Context, User Profile, and Evaluated Scheme Results. Do not invent facts or deadlines.\n"
+        "2. ELIGIBILITY HONESTY: Clearly distinguish between 'Potentially Eligible' and 'Needs Verification'. Never claim guaranteed eligibility — always state that official approval is subject to departmental verification.\n"
+        "3. EXPLAIN MATCHES: Explicitly mention why a scheme matches the user's profile (e.g. matching state, occupation, income ceiling, or category).\n"
+        "4. HIGHLIGHT MISSING INFORMATION: Inform the user what certificates or documents (e.g. income certificate, domicile certificate, marksheet) they must provide to verify eligibility.\n"
+        "5. OFFICIAL LINKS: Cite the official application portal link and official government sources for each scheme.\n"
+        "6. STRUCTURE: Use clean markdown bullet points: Scheme Name, Status, Why It Matches, Benefits, Verification Needed, and How to Apply."
     )
+
+    full_context_parts = []
+    if profile_context_str:
+        full_context_parts.append(profile_context_str)
+    if elig_context_str:
+        full_context_parts.append(elig_context_str)
+    if context_str:
+        full_context_parts.append(f"DOCUMENT REPOSITORY CONTEXT:\n{context_str}")
+
+    combined_context = "\n\n====================\n\n".join(full_context_parts)
 
     prompt = (
         f"{system_prompt}\n\n"
-        f"Context:\n{context_str}\n\n"
+        f"Context:\n{combined_context}\n\n"
         f"User Question: {query}\n\n"
         f"Answer:"
     )
@@ -232,35 +310,79 @@ def generate_answer(query: str, chunks: list) -> str:
         return f"Jawab generate karne mein error aaya: {e}"
 
 
-def ask(query: str, n_results: int = N_RESULTS, level_filter: str = None) -> dict:
+def is_eligibility_or_discovery_query(query: str) -> bool:
+    """Check if query is asking about eligibility or scheme recommendations."""
+    q_low = query.lower()
+    keywords = [
+        "eligible", "eligibility", "recommend", "scheme for me", "schemes for me",
+        "meri yojana", "kiske liye eligible", "yojana batao", "kon si yojana",
+        "kaun si yojana", "apply kar sakta", "apply kar sakti", "scholarship",
+        "chhatravritti", "kisan", "farmer", "student", "subsidy", "pension",
+        "loan", "benefit", "qualify", "which scheme", "what scheme", "my scheme"
+    ]
+    return any(k in q_low for k in keywords)
+
+
+def ask(
+    query: str,
+    n_results: int = N_RESULTS,
+    level_filter: str = None,
+    user_profile: dict = None
+) -> dict:
     """
     End-to-end RAG pipeline:
-    1. retrieve() se top chunks lata hai
-    2. generate_answer() se grounded response banata hai
-    3. Agar koi chunks na milein to 'no info' answer return karta hai
+    1. Evaluates user profile eligibility if profile is provided and query is relevant
+    2. retrieve() se top chunks lata hai from ChromaDB
+    3. generate_answer() se grounded response banata hai Gemini 2.5 Flash se
+    4. Sources aur links combine karke return karta hai
 
     Args:
         query: User ka sawal.
         n_results: Deduplicate ke baad kitni schemes return karni hain.
         level_filter: Optional filter ('state', 'central').
+        user_profile: Optional user profile dict for personalization.
 
     Returns:
         dict: {
             "answer": str,
             "sources": [{"name": ..., "region": ..., "section": ..., "score": ...}],
-            "chunks": list of retrieved chunk dicts
+            "chunks": list of retrieved chunk dicts,
+            "evaluated_schemes": list of evaluated scheme dicts (if any)
         }
     """
+    evaluated_schemes = []
+
+    # If profile exists, evaluate deterministic recommendations
+    if user_profile:
+        try:
+            from eligibility.recommendation_service import get_recommendations_for_profile
+            # If user query is an eligibility or scheme discovery question, or generic inquiry:
+            evaluated_schemes = get_recommendations_for_profile(
+                user_profile,
+                top_n=5,
+                search_query=query
+            )
+        except Exception as e:
+            print(f"Error evaluating schemes for profile in RAG: {e}")
+
+    # Standard ChromaDB retrieval
     chunks = retrieve(query, n_results=n_results, level_filter=level_filter)
 
-    if not chunks:
+    if not chunks and not evaluated_schemes:
         return {
             "answer": "Mere paas is baare mein jankari nahi hai.",
             "sources": [],
             "chunks": [],
+            "evaluated_schemes": [],
         }
 
-    answer = generate_answer(query, chunks)
+    answer = generate_answer(
+        query,
+        chunks,
+        user_profile=user_profile,
+        evaluated_schemes=evaluated_schemes
+    )
+
     sources = [
         {
             "name": c["name"],
@@ -271,10 +393,24 @@ def ask(query: str, n_results: int = N_RESULTS, level_filter: str = None) -> dic
         for c in chunks
     ]
 
+    # Add evaluated schemes to sources if not already present
+    existing_names = {s["name"].lower() for s in sources}
+    for es in evaluated_schemes:
+        if es["name"].lower() not in existing_names:
+            sources.append({
+                "name": es["name"],
+                "region": es.get("region", "Central"),
+                "section": f"Eligibility ({es['status']})",
+                "score": round(es.get("score", 80.0) / 100.0, 4),
+                "official_link": es.get("official_link"),
+            })
+            existing_names.add(es["name"].lower())
+
     return {
         "answer": answer,
         "sources": sources,
         "chunks": chunks,
+        "evaluated_schemes": evaluated_schemes,
     }
 
 

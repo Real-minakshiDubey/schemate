@@ -1,7 +1,8 @@
 import sys
+import uuid
 from pathlib import Path
 
-# Add project root to sys.path so retrieval.rag and app imports work properly
+# Add project root to sys.path so retrieval.rag and app imports work seamlessly
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
@@ -9,23 +10,38 @@ if str(ROOT_DIR) not in sys.path:
 import streamlit as st
 
 from app.components import apply_custom_css, render_sources, render_welcome
-from app.voice import transcribe_audio, text_to_speech
+from app.auth import render_auth_view
+from app.sidebar import render_sidebar
+from app.voice import text_to_speech, transcribe_audio
+from app.db import (
+    create_conversation,
+    add_message,
+    get_conversation_messages,
+    update_conversation_title,
+    get_user_profile,
+    is_onboarding_completed,
+)
+from app.onboarding_ui import render_onboarding_view
+from app.recommendations_ui import render_recommendations_view
+from app.profile_ui import render_profile_view
+from app.saved_schemes_ui import render_saved_schemes_view
 
+# ---------------------------------------------------------------------------
+# RAG Engine loader with caching
+# ---------------------------------------------------------------------------
 try:
     from retrieval.rag import ask
 except ImportError:
-    # Graceful fallback agar retrieval/rag.py abhi ready na ho
-    def ask(query: str, level_filter: str | None = None):
+    def ask(query: str, level_filter: str | None = None, user_profile: dict | None = None):
         return {
-            "answer": "RAG module abhi load nahi hua. Kripya `retrieval/rag.py` check karein.",
+            "answer": "RAG module not found. Please verify `retrieval/rag.py`.",
             "sources": [],
         }
 
 
-# Handle model loading / RAG pipeline with @st.cache_resource
-@st.cache_resource(show_spinner="AI models initialize ho rahe hain...")
+@st.cache_resource(show_spinner="Initializing Schemate AI models...")
 def get_rag_engine():
-    """Cache the RAG ask function or pipeline to avoid re-initializing models on every rerun."""
+    """Cache the RAG ask pipeline to avoid re-initializing models on every rerun."""
     try:
         from retrieval.rag import ask as _ask
         return _ask
@@ -33,170 +49,189 @@ def get_rag_engine():
         return ask
 
 
-# Page configuration
-st.set_page_config(page_title="SchemeSense", page_icon="🏛️", layout="wide")
-
-# Apply modern Deep Indigo + Electric Blue futuristic styling
-apply_custom_css()
-
-# Futuristic Hero Card Header
-st.markdown(
-    """
-    <div class="hero-container">
-        <div class="hero-title-row">
-            <span class="hero-icon">🏛️</span>
-            <h1 class="hero-title">SchemeSense</h1>
-        </div>
-        <div class="hero-sub">
-            AI-powered Government Scheme Discovery & Eligibility Assistant
-        </div>
-        <div class="feature-badge-row">
-            <span class="feature-badge"><span>🌐</span> Hindi / हिंदी</span>
-            <span class="feature-badge"><span>🇬🇧</span> English</span>
-            <span class="feature-badge"><span>🔀</span> Hinglish</span>
-            <span class="feature-badge"><span>🎙️</span> Voice Input & Audio Output</span>
-            <span class="feature-badge"><span>⚡</span> Multilingual AI</span>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
+# ---------------------------------------------------------------------------
+# Streamlit Page Setup & Styling
+# ---------------------------------------------------------------------------
+st.set_page_config(
+    page_title="Schemate AI - Personalized Government Scheme Discovery",
+    page_icon="🏛️",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# --- Sidebar Redesign ---
-with st.sidebar:
-    # SchemeSense branding card
-    st.markdown(
-        """
-        <div class="sidebar-brand-box">
-            <div class="sidebar-brand-icon">🏛️</div>
-            <div>
-                <div class="sidebar-brand-text">SchemeSense</div>
-                <div class="sidebar-brand-tag">Intelligent Copilot</div>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+# Apply global styling
+apply_custom_css()
 
-    st.markdown("### ⚙️ Scheme Filter")
-    level_option = st.radio(
-        "Filter by Level",
-        options=["All", "State", "Central"],
-        index=0,
-        help="Filter schemes by government jurisdiction level",
-        label_visibility="collapsed",
-    )
-    level_filter_map = {
-        "All": None,
-        "State": "state",
-        "Central": "central",
-    }
-    level_filter = level_filter_map[level_option]
+# ---------------------------------------------------------------------------
+# Authentication Gate
+# ---------------------------------------------------------------------------
+if "user" not in st.session_state or not st.session_state.user:
+    render_auth_view()
+    st.stop()
 
-    st.markdown("---")
-    st.markdown("### 🎤 Voice Input")
-    st.caption("Speaking Language")
-    voice_lang = st.selectbox(
-        "Speaking Language",
-        options=["English", "Auto (English / Hindi)", "Hindi"],
-        index=0,
-        help="Select English if speaking in English, or Hindi for pure Hindi",
-        label_visibility="collapsed",
-    )
-    st.caption("Record your question:")
-    audio_value = st.audio_input("Apna sawal boliye...", label_visibility="collapsed")
+# Authenticated User Context
+current_user = st.session_state.user
 
+# ---------------------------------------------------------------------------
+# Onboarding Gate
+# ---------------------------------------------------------------------------
+user_profile = get_user_profile(current_user["id"])
+onboarding_done = is_onboarding_completed(current_user["id"])
+
+# If user has not completed onboarding, route directly to the onboarding workflow
+if not onboarding_done:
+    render_onboarding_view(current_user)
+    st.stop()
+
+# Set active profile in session state
+st.session_state.user_profile = user_profile
+
+# Default active view for onboarded users is recommendations unless switched to chat or profile
+if "active_view" not in st.session_state:
+    st.session_state.active_view = "recommendations"
+
+# ---------------------------------------------------------------------------
+# Sidebar (ChatGPT-style with history, new chat, filters, and user account)
+# ---------------------------------------------------------------------------
+render_sidebar(current_user)
+
+# ---------------------------------------------------------------------------
+# View Routing: Recommendations | Saved Schemes | Profile | Chat
+# ---------------------------------------------------------------------------
+active_view = st.session_state.get("active_view", "recommendations")
+
+if active_view == "recommendations":
+    render_recommendations_view(current_user)
+
+elif active_view == "saved_schemes":
+    render_saved_schemes_view(current_user)
+
+elif active_view == "profile":
+    render_profile_view(current_user)
+
+elif active_view == "chat":
+    # ---------------------------------------------------------------------------
+    # Main Chat Area
+    # ---------------------------------------------------------------------------
+    # Initialize active messages
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # If an existing conversation is active, ensure messages are loaded if empty
+    current_cid = st.session_state.get("current_conversation_id")
+    if current_cid and not st.session_state.messages:
+        st.session_state.messages = get_conversation_messages(current_cid, current_user["id"])
+
+    # Show welcome screen if no messages in current view
+    if not st.session_state.messages:
+        render_welcome()
+
+    # Render chat history
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+            if msg.get("sources"):
+                render_sources(msg["sources"])
+            if msg.get("audio"):
+                st.audio(msg["audio"], format="audio/mp3")
+
+    # ---------------------------------------------------------------------------
+    # Chat Composer: Text Input + Fixed 🎙️ Microphone + Send Button
+    # ---------------------------------------------------------------------------
+    pending_query = st.session_state.pop("pending_query", None)
     voice_query = None
-    if audio_value is not None:
-        # Track processed audio using content hash to prevent re-querying on rerun
-        audio_bytes_val = audio_value.getvalue() if hasattr(audio_value, "getvalue") else None
-        audio_hash = hash(audio_bytes_val) if audio_bytes_val is not None else id(audio_value)
-        if st.session_state.get("last_audio_hash") != audio_hash:
-            st.session_state["last_audio_hash"] = audio_hash
-            if hasattr(audio_value, "seek"):
-                audio_value.seek(0)
-            with st.spinner("Voice audio transcribe ho raha hai..."):
-                transcribed = transcribe_audio(audio_value, language_mode=voice_lang)
-            if transcribed:
-                st.success(f"Transcript: {transcribed}")
-                voice_query = transcribed
-            else:
-                st.warning("Voice samajh nahi aayi, kripya dobara bole ya type karein.")
 
-    st.markdown("---")
-    st.markdown("### ℹ️ About SchemeSense")
-    st.markdown(
-        """
-        <div style="background: #171D35; border: 1px solid #293352; border-radius: 12px; padding: 14px; font-size: 0.85rem; color: #94A3B8; line-height: 1.5;">
-            <p style="margin-top: 0; color: #F1F5F9; font-weight: 600;">Enterprise RAG Platform</p>
-            An AI copilot delivering verified details for Central & Madhya Pradesh welfare policies.
-            <ul style="margin: 8px 0 0 -16px; padding: 0;">
-                <li>Cross-lingual retrieval (E5-base)</li>
-                <li>Strict factual grounding (Gemini 2.5)</li>
-                <li>Bi-directional voice interface</li>
-            </ul>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    # Native Chat Input
+    text_query = st.chat_input("Ask anything about Indian Government Schemes...")
 
-# --- Main Chat Area ---
-# Initialize session state for messages
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+    # Microphone Popover positioned directly inside the chat bar left of Send button
+    st.markdown('<div class="st-chat-mic-anchor">', unsafe_allow_html=True)
+    with st.popover("🎙️", help="Voice Input (Click to speak)"):
+        st.markdown("##### 🎙️ Voice Input")
+        v_lang = st.selectbox(
+            "Speaking Language",
+            options=["English", "Auto (English / Hindi)", "Hindi"],
+            index=0,
+            key="chat_mic_lang"
+        )
+        audio_val = st.audio_input("Record voice query", label_visibility="collapsed", key="chat_mic_rec")
+        if audio_val is not None:
+            audio_bytes_val = audio_val.getvalue() if hasattr(audio_val, "getvalue") else None
+            audio_hash = hash(audio_bytes_val) if audio_bytes_val is not None else id(audio_val)
+            if st.session_state.get("last_audio_hash") != audio_hash:
+                st.session_state["last_audio_hash"] = audio_hash
+                if hasattr(audio_val, "seek"):
+                    audio_val.seek(0)
+                with st.spinner("Transcribing voice audio..."):
+                    transcribed = transcribe_audio(audio_val, language_mode=v_lang)
+                if transcribed:
+                    st.success(f"Recognized: {transcribed}")
+                    voice_query = transcribed
+                else:
+                    st.warning("Speech not recognized, please speak clearly.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# Show welcome screen if no messages yet
-if not st.session_state.messages:
-    render_welcome()
+    # Determine final query to process
+    query = pending_query if pending_query else (voice_query if voice_query else text_query)
 
-# Render chat history
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-        if msg.get("sources"):
-            render_sources(msg["sources"])
-        if msg.get("audio"):
-            st.audio(msg["audio"], format="audio/mp3")
+    if query and query.strip():
+        user_text = query.strip()
 
-# Check for pending query from welcome buttons
-pending_query = st.session_state.pop("pending_query", None)
+        # 1. Ensure a conversation exists for persistent storage
+        if not current_cid:
+            current_cid = str(uuid.uuid4())
+            conv_title = user_text[:35] + ("..." if len(user_text) > 35 else "")
+            create_conversation(current_user["id"], current_cid, conv_title)
+            st.session_state.current_conversation_id = current_cid
 
-# Chat input
-text_query = st.chat_input("Apna sawal poochiye...")
+        # 2. Add user message to UI and save to persistent database
+        st.session_state.messages.append({"role": "user", "content": user_text})
+        add_message(current_user["id"], current_cid, "user", user_text)
 
-# Prioritize pending button click, voice transcription, or text input
-query = pending_query if pending_query else (voice_query if voice_query else text_query)
+        with st.chat_message("user"):
+            st.markdown(user_text)
 
-if query:
-    # 1. Add user message to session state
-    st.session_state.messages.append({"role": "user", "content": query})
-    with st.chat_message("user"):
-        st.markdown(query)
+        # 3. Retrieve and Generate answer via personalized RAG pipeline
+        with st.chat_message("assistant"):
+            level_filter = st.session_state.get("level_filter")
+            with st.spinner("Searching official government schemes & evaluating eligibility..."):
+                rag_ask = get_rag_engine()
+                # Pass user_profile into rag_ask
+                result = rag_ask(
+                    user_text,
+                    level_filter=level_filter,
+                    user_profile=user_profile
+                )
 
-    # 2. Get response from assistant
-    with st.chat_message("assistant"):
-        with st.spinner("Schemes dhoond raha hoon..."):
-            rag_ask = get_rag_engine()
-            result = rag_ask(query, level_filter=level_filter)
+            answer = result.get("answer", "") if isinstance(result, dict) else str(result)
+            sources = result.get("sources", []) if isinstance(result, dict) else []
 
-        answer = result.get("answer", "") if isinstance(result, dict) else str(result)
-        sources = result.get("sources", []) if isinstance(result, dict) else []
+            # Display answer
+            st.markdown(answer)
 
-        # Display answer with st.markdown
-        st.markdown(answer)
+            # Display sources
+            if sources:
+                render_sources(sources)
 
-        # Call render_sources(result['sources'])
-        render_sources(sources)
+            # Generate audio output via existing voice integration
+            audio_bytes = text_to_speech(answer)
+            if audio_bytes:
+                st.audio(audio_bytes, format="audio/mp3")
 
-        # Optionally play TTS audio with st.audio
-        audio_bytes = text_to_speech(answer)
-        if audio_bytes:
-            st.audio(audio_bytes, format="audio/mp3")
+            # Save assistant message to persistent DB
+            add_message(
+                current_user["id"],
+                current_cid,
+                "assistant",
+                answer,
+                sources=sources,
+                audio_blob=audio_bytes
+            )
 
-        # Add assistant message to session state
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": answer,
-            "sources": sources,
-            "audio": audio_bytes,
-        })
+            # Append to active session messages
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": answer,
+                "sources": sources,
+                "audio": audio_bytes,
+            })
