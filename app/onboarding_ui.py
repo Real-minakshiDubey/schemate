@@ -14,6 +14,46 @@ from app.db import save_user_profile, get_user_profile, set_user_language
 from eligibility.scheme_rules import STATES_AND_UTS
 
 
+STATE_TRANSLATIONS_HI = {
+    "Andhra Pradesh": "आंध्र प्रदेश (Andhra Pradesh)",
+    "Arunachal Pradesh": "अरुणाचल प्रदेश (Arunachal Pradesh)",
+    "Assam": "असम (Assam)",
+    "Bihar": "बिहार (Bihar)",
+    "Chhattisgarh": "छत्तीसगढ़ (Chhattisgarh)",
+    "Goa": "गोवा (Goa)",
+    "Gujarat": "गुजरात (Gujarat)",
+    "Haryana": "हरियाणा (Haryana)",
+    "Himachal Pradesh": "हिमाचल प्रदेश (Himachal Pradesh)",
+    "Jharkhand": "झारखंड (Jharkhand)",
+    "Karnataka": "कर्नाटक (Karnataka)",
+    "Kerala": "केरल (Kerala)",
+    "Madhya Pradesh": "मध्य प्रदेश (Madhya Pradesh)",
+    "Maharashtra": "महाराष्ट्र (Maharashtra)",
+    "Manipur": "मणिपुर (Manipur)",
+    "Meghalaya": "मेघालय (Meghalaya)",
+    "Mizoram": "मिज़ोरम (Mizoram)",
+    "Nagaland": "नागालैंड (Nagaland)",
+    "Odisha": "ओडिशा (Odisha)",
+    "Punjab": "पंजाब (Punjab)",
+    "Rajasthan": "राजस्थान (Rajasthan)",
+    "Sikkim": "सिक्किम (Sikkim)",
+    "Tamil Nadu": "तमिलनाडु (Tamil Nadu)",
+    "Telangana": "तेलंगाना (Telangana)",
+    "Tripura": "त्रिपुरा (Tripura)",
+    "Uttar Pradesh": "उत्तर प्रदेश (Uttar Pradesh)",
+    "Uttarakhand": "उत्तराखंड (Uttarakhand)",
+    "West Bengal": "पश्चिम बंगाल (West Bengal)",
+    "Andaman and Nicobar Islands": "अंडमान और निकोबार द्वीप समूह (Andaman & Nicobar)",
+    "Chandigarh": "चंडीगढ़ (Chandigarh)",
+    "Dadra and Nagar Haveli and Daman and Diu": "दादरा और नगर हवेली और दमन और दीव",
+    "Delhi": "दिल्ली (Delhi)",
+    "Jammu and Kashmir": "जम्मू और कश्मीर (Jammu & Kashmir)",
+    "Ladakh": "लद्दाख (Ladakh)",
+    "Lakshadweep": "लक्षद्वीप (Lakshadweep)",
+    "Puducherry": "पुदुचेरी (Puducherry)",
+}
+
+
 def render_onboarding_view(user: Dict[str, Any]):
     """Main entrypoint for rendering the onboarding experience."""
     user_id = user["id"]
@@ -163,11 +203,21 @@ def _render_step_2_basic_info(user_id: int, lang: str):
 
         c_state, c_dist = st.columns(2)
         with c_state:
-            # Dropdown with all 28 States and 8 UTs
-            state_options = sorted(STATES_AND_UTS)
+            # Dropdown with all 28 States and 8 UTs (localized for Hindi)
+            raw_states = sorted(STATES_AND_UTS)
             current_state = draft.get("state", "Madhya Pradesh")
-            state_idx = state_options.index(current_state) if current_state in state_options else 0
-            state_val = st.selectbox(t("state_label", lang), options=state_options, index=state_idx)
+            
+            if lang == "hi":
+                state_options = [STATE_TRANSLATIONS_HI.get(s, s) for s in raw_states]
+                curr_display = STATE_TRANSLATIONS_HI.get(current_state, current_state)
+                state_idx = state_options.index(curr_display) if curr_display in state_options else 0
+                selected_display = st.selectbox(t("state_label", lang), options=state_options, index=state_idx)
+                # Map back to canonical state name
+                state_val = next((k for k, v in STATE_TRANSLATIONS_HI.items() if v == selected_display), selected_display)
+            else:
+                state_options = raw_states
+                state_idx = state_options.index(current_state) if current_state in state_options else 0
+                state_val = st.selectbox(t("state_label", lang), options=state_options, index=state_idx)
         with c_dist:
             dist_val = st.text_input(
                 t("district_label", lang),
