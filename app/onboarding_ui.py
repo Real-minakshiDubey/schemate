@@ -153,10 +153,10 @@ def _render_step_2_basic_info(user_id: int, lang: str):
                 t("gender_transgender", lang),
                 t("gender_other", lang),
             ]
-            current_gender = draft.get("gender", t("gender_male", lang))
+            current_gender = str(draft.get("gender") or t("gender_male", lang))
             gender_idx = 0
             for i, opt in enumerate(gender_options):
-                if current_gender.lower() in opt.lower():
+                if current_gender.lower() in str(opt).lower():
                     gender_idx = i
                     break
             gender_val = st.selectbox(t("gender_label", lang), options=gender_options, index=gender_idx)
